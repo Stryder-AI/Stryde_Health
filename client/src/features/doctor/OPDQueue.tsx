@@ -383,6 +383,7 @@ function ConsultationSheet({
   onComplete: () => void;
   onSaveDraft: (draft: ConsultDraft) => void;
 }) {
+  const { t } = useTranslation();
   const printRef = useRef<HTMLDivElement>(null);
 
   // Vitals
