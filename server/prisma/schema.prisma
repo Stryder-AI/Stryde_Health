@@ -1,0 +1,548 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ──────────────────────────────────────────────────────
+
+enum UserRole {
+  super_admin
+  receptionist
+  doctor
+  lab_technician
+  pharmacist
+}
+
+enum Gender {
+  male
+  female
+  other
+}
+
+enum AppointmentType {
+  walk_in
+  scheduled
+}
+
+enum AppointmentStatus {
+  waiting
+  in_progress
+  completed
+  cancelled
+  no_show
+}
+
+enum Priority {
+  normal
+  urgent
+  emergency
+}
+
+enum VisitStatus {
+  in_progress
+  completed
+  referred
+}
+
+enum PaymentStatus {
+  unpaid
+  paid
+  partial
+}
+
+enum PrescriptionStatus {
+  active
+  dispensed
+  partially_dispensed
+}
+
+enum MedicineRoute {
+  oral
+  iv
+  im
+  topical
+  sublingual
+  inhalation
+  rectal
+  ophthalmic
+  otic
+  nasal
+}
+
+enum LabOrderStatus {
+  pending
+  in_progress
+  completed
+  partial
+}
+
+enum LabTestStatus {
+  pending
+  in_progress
+  completed
+}
+
+enum SampleType {
+  blood
+  urine
+  serum
+  plasma
+  stool
+  swab
+  csf
+  other
+}
+
+enum ProductUnit {
+  piece
+  strip
+  bottle
+  box
+  tube
+  pack
+  vial
+  ampoule
+  sachet
+}
+
+enum DiscountType {
+  percentage
+  fixed
+}
+
+enum PaymentMethod {
+  cash
+  easypaisa
+  credit
+  cheque
+}
+
+enum SaleStatus {
+  completed
+  refunded
+  voided
+  saved
+}
+
+enum StockMovementType {
+  purchase
+  sale
+  adjustment
+  return_stock
+  expired
+  damaged
+}
+
+enum InvoiceItemType {
+  consultation
+  lab_test
+  medicine
+  procedure
+}
+
+// ─── USERS ──────────────────────────────────────────────────────
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  passwordHash   String   @map("password_hash")
+  fullName       String   @map("full_name")
+  role           UserRole
+  department     String?
+  specialization String?
+  isActive       Boolean  @default(true) @map("is_active")
+  avatarUrl      String?  @map("avatar_url")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  registeredPatients Patient[]        @relation("RegisteredBy")
+  doctorAppointments Appointment[]    @relation("DoctorAppointments")
+  doctorVisits       Visit[]          @relation("DoctorVisits")
+  prescriptions      Prescription[]   @relation("DoctorPrescriptions")
+  labOrders          LabOrder[]       @relation("DoctorLabOrders")
+  performedTests     LabTest[]        @relation("PerformedBy")
+  dispensedItems     DispensedItem[]  @relation("DispensedBy")
+  cashierSales       Sale[]           @relation("CashierSales")
+  stockMovements     StockMovement[]  @relation("PerformedMovement")
+
+  @@map("users")
+}
+
+// ─── PATIENTS ───────────────────────────────────────────────────
+
+model Patient {
+  id                    String   @id @default(uuid())
+  mrNumber              String   @unique @map("mr_number")
+  firstName             String   @map("first_name")
+  lastName              String   @map("last_name")
+  phone                 String
+  cnic                  String?
+  dateOfBirth           DateTime? @map("date_of_birth")
+  gender                Gender
+  bloodGroup            String?  @map("blood_group")
+  address               String?
+  emergencyContactName  String?  @map("emergency_contact_name")
+  emergencyContactPhone String?  @map("emergency_contact_phone")
+  ailments              Json?    @default("[]")
+  allergies             String?
+  registeredBy          String?  @map("registered_by")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  registeredByUser User?          @relation("RegisteredBy", fields: [registeredBy], references: [id])
+  appointments     Appointment[]
+  visits           Visit[]
+  prescriptions    Prescription[]
+  labOrders        LabOrder[]
+  sales            Sale[]         @relation("PatientSales")
+  invoices         Invoice[]
+
+  @@map("patients")
+}
+
+// ─── APPOINTMENTS ───────────────────────────────────────────────
+
+model Appointment {
+  id          String            @id @default(uuid())
+  patientId   String            @map("patient_id")
+  doctorId    String            @map("doctor_id")
+  date        DateTime          @db.Date
+  timeSlot    String?           @map("time_slot")
+  type        AppointmentType
+  status      AppointmentStatus @default(waiting)
+  tokenNumber Int               @map("token_number")
+  department  String?
+  priority    Priority          @default(normal)
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  User    @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  visits  Visit[]
+
+  @@map("appointments")
+}
+
+// ─── VISITS ─────────────────────────────────────────────────────
+
+model Visit {
+  id              String      @id @default(uuid())
+  patientId       String      @map("patient_id")
+  appointmentId   String?     @map("appointment_id")
+  doctorId        String      @map("doctor_id")
+  visitDate       DateTime    @default(now()) @map("visit_date")
+  chiefComplaint  String?     @map("chief_complaint")
+  diagnosis       String?
+  notes           String?
+  vitals          Json?
+  status          VisitStatus @default(in_progress)
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  patient       Patient        @relation(fields: [patientId], references: [id])
+  appointment   Appointment?   @relation(fields: [appointmentId], references: [id])
+  doctor        User           @relation("DoctorVisits", fields: [doctorId], references: [id])
+  prescriptions Prescription[]
+  labOrders     LabOrder[]
+  invoices      Invoice[]
+
+  @@map("visits")
+}
+
+// ─── PRESCRIPTIONS ──────────────────────────────────────────────
+
+model Prescription {
+  id            String             @id @default(uuid())
+  visitId       String             @map("visit_id")
+  patientId     String             @map("patient_id")
+  doctorId      String             @map("doctor_id")
+  date          DateTime           @default(now())
+  notes         String?
+  paymentStatus PaymentStatus      @default(unpaid) @map("payment_status")
+  status        PrescriptionStatus @default(active)
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  visit          Visit              @relation(fields: [visitId], references: [id])
+  patient        Patient            @relation(fields: [patientId], references: [id])
+  doctor         User               @relation("DoctorPrescriptions", fields: [doctorId], references: [id])
+  items          PrescriptionItem[]
+  dispensedItems DispensedItem[]
+  sales          Sale[]             @relation("PrescriptionSales")
+
+  @@map("prescriptions")
+}
+
+model PrescriptionItem {
+  id             String        @id @default(uuid())
+  prescriptionId String        @map("prescription_id")
+  medicineName   String        @map("medicine_name")
+  dosage         String?
+  frequency      String?
+  duration       String?
+  route          MedicineRoute? @default(oral)
+  instructions   String?
+  quantity       Int?
+
+  // Relations
+  prescription   Prescription    @relation(fields: [prescriptionId], references: [id])
+  dispensedItems DispensedItem[]
+
+  @@map("prescription_items")
+}
+
+model DispensedItem {
+  id                  String  @id @default(uuid())
+  prescriptionId      String  @map("prescription_id")
+  prescriptionItemId  String  @map("prescription_item_id")
+  prescribedMedicine  String  @map("prescribed_medicine")
+  dispensedMedicine   String  @map("dispensed_medicine")
+  dispensedProductId  String? @map("dispensed_product_id")
+  isSubstitute        Boolean @default(false) @map("is_substitute")
+  substitutionReason  String? @map("substitution_reason")
+  quantityDispensed   Int     @map("quantity_dispensed")
+  dispensedById       String  @map("dispensed_by")
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  // Relations
+  prescription     Prescription     @relation(fields: [prescriptionId], references: [id])
+  prescriptionItem PrescriptionItem @relation(fields: [prescriptionItemId], references: [id])
+  dispensedProduct Product?         @relation(fields: [dispensedProductId], references: [id])
+  dispensedBy      User             @relation("DispensedBy", fields: [dispensedById], references: [id])
+
+  @@map("dispensed_items")
+}
+
+// ─── LAB MODULE ─────────────────────────────────────────────────
+
+model LabOrder {
+  id            String         @id @default(uuid())
+  visitId       String         @map("visit_id")
+  patientId     String         @map("patient_id")
+  doctorId      String         @map("doctor_id")
+  paymentStatus PaymentStatus  @default(unpaid) @map("payment_status")
+  status        LabOrderStatus @default(pending)
+  priority      Priority       @default(normal)
+  notes         String?
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  visit   Visit     @relation(fields: [visitId], references: [id])
+  patient Patient   @relation(fields: [patientId], references: [id])
+  doctor  User      @relation("DoctorLabOrders", fields: [doctorId], references: [id])
+  tests   LabTest[]
+
+  @@map("lab_orders")
+}
+
+model LabTest {
+  id             String        @id @default(uuid())
+  labOrderId     String        @map("lab_order_id")
+  testTemplateId String        @map("test_template_id")
+  status         LabTestStatus @default(pending)
+  results        Json?
+  performedById  String?       @map("performed_by")
+  completedAt    DateTime?     @map("completed_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
+
+  // Relations
+  labOrder     LabOrder     @relation(fields: [labOrderId], references: [id])
+  testTemplate TestTemplate @relation(fields: [testTemplateId], references: [id])
+  performedBy  User?        @relation("PerformedBy", fields: [performedById], references: [id])
+
+  @@map("lab_tests")
+}
+
+model TestTemplate {
+  id              String  @id @default(uuid())
+  name            String
+  category        String?
+  department      String? @default("Pathology")
+  sampleType      SampleType @default(blood) @map("sample_type")
+  turnaroundHours Int?    @map("turnaround_hours")
+  price           Decimal @default(0) @db.Decimal(10, 2)
+  isActive        Boolean @default(true) @map("is_active")
+
+  // Relations
+  parameters TestTemplateParam[]
+  labTests   LabTest[]
+
+  @@map("test_templates")
+}
+
+model TestTemplateParam {
+  id             String  @id @default(uuid())
+  templateId     String  @map("template_id")
+  parameterName  String  @map("parameter_name")
+  unit           String?
+  refRangeMale   String? @map("ref_range_male")
+  refRangeFemale String? @map("ref_range_female")
+  refRangeChild  String? @map("ref_range_child")
+  sortOrder      Int     @default(0) @map("sort_order")
+  isCalculated   Boolean @default(false) @map("is_calculated")
+
+  // Relations
+  template TestTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@map("test_template_params")
+}
+
+// ─── PHARMACY / ePOS ────────────────────────────────────────────
+
+model ProductGroup {
+  id        String   @id @default(uuid())
+  name      String
+  parentId  String?  @map("parent_id")
+  sortOrder Int      @default(0) @map("sort_order")
+  isActive  Boolean  @default(true) @map("is_active")
+
+  // Relations
+  parent   ProductGroup?  @relation("GroupHierarchy", fields: [parentId], references: [id])
+  children ProductGroup[] @relation("GroupHierarchy")
+  products Product[]
+
+  @@map("product_groups")
+}
+
+model Product {
+  id             String      @id @default(uuid())
+  name           String
+  genericName    String?     @map("generic_name")
+  groupId        String?     @map("group_id")
+  barcode        String?     @unique
+  code           String?     @unique
+  costPrice      Decimal     @default(0) @map("cost_price") @db.Decimal(10, 2)
+  salePrice      Decimal     @default(0) @map("sale_price") @db.Decimal(10, 2)
+  taxRate        Decimal     @default(0) @map("tax_rate") @db.Decimal(5, 2)
+  quantityOnHand Int         @default(0) @map("quantity_on_hand")
+  reorderLevel   Int         @default(10) @map("reorder_level")
+  unit           ProductUnit @default(piece)
+  manufacturer   String?
+  expiryDate     DateTime?   @map("expiry_date")
+  batchNumber    String?     @map("batch_number")
+  isActive       Boolean     @default(true) @map("is_active")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  group          ProductGroup?   @relation(fields: [groupId], references: [id])
+  saleItems      SaleItem[]
+  stockMovements StockMovement[]
+  dispensedItems DispensedItem[]
+
+  @@map("products")
+}
+
+model Sale {
+  id             String        @id @default(uuid())
+  saleNumber     Int           @unique @default(autoincrement()) @map("sale_number")
+  patientId      String?       @map("patient_id")
+  prescriptionId String?       @map("prescription_id")
+  cashierId      String        @map("cashier_id")
+  subtotal       Decimal       @default(0) @db.Decimal(10, 2)
+  taxTotal       Decimal       @default(0) @map("tax_total") @db.Decimal(10, 2)
+  discountAmount Decimal       @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  discountType   DiscountType? @map("discount_type")
+  total          Decimal       @default(0) @db.Decimal(10, 2)
+  paymentMethod  PaymentMethod @default(cash) @map("payment_method")
+  amountReceived Decimal       @default(0) @map("amount_received") @db.Decimal(10, 2)
+  changeGiven    Decimal       @default(0) @map("change_given") @db.Decimal(10, 2)
+  status         SaleStatus    @default(completed)
+  notes          String?
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  patient      Patient?      @relation("PatientSales", fields: [patientId], references: [id])
+  prescription Prescription? @relation("PrescriptionSales", fields: [prescriptionId], references: [id])
+  cashier      User          @relation("CashierSales", fields: [cashierId], references: [id])
+  items        SaleItem[]
+
+  @@map("sales")
+}
+
+model SaleItem {
+  id        String  @id @default(uuid())
+  saleId    String  @map("sale_id")
+  productId String  @map("product_id")
+  quantity  Int
+  unitPrice Decimal @map("unit_price") @db.Decimal(10, 2)
+  discount  Decimal @default(0) @db.Decimal(10, 2)
+  tax       Decimal @default(0) @db.Decimal(10, 2)
+  lineTotal Decimal @map("line_total") @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  sale    Sale    @relation(fields: [saleId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("sale_items")
+}
+
+model StockMovement {
+  id            String            @id @default(uuid())
+  productId     String            @map("product_id")
+  type          StockMovementType
+  quantity      Int
+  referenceId   String?           @map("reference_id")
+  notes         String?
+  performedById String            @map("performed_by")
+  createdAt     DateTime          @default(now()) @map("created_at")
+
+  // Relations
+  product     Product @relation(fields: [productId], references: [id])
+  performedBy User    @relation("PerformedMovement", fields: [performedById], references: [id])
+
+  @@map("stock_movements")
+}
+
+// ─── BILLING ────────────────────────────────────────────────────
+
+model Invoice {
+  id            String        @id @default(uuid())
+  invoiceNumber Int           @unique @default(autoincrement()) @map("invoice_number")
+  patientId     String        @map("patient_id")
+  visitId       String?       @map("visit_id")
+  subtotal      Decimal       @default(0) @db.Decimal(10, 2)
+  tax           Decimal       @default(0) @db.Decimal(10, 2)
+  discount      Decimal       @default(0) @db.Decimal(10, 2)
+  total         Decimal       @default(0) @db.Decimal(10, 2)
+  paidAmount    Decimal       @default(0) @map("paid_amount") @db.Decimal(10, 2)
+  paymentStatus PaymentStatus @default(unpaid) @map("payment_status")
+  paymentMethod PaymentMethod? @map("payment_method")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  patient Patient       @relation(fields: [patientId], references: [id])
+  visit   Visit?        @relation(fields: [visitId], references: [id])
+  items   InvoiceItem[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String          @id @default(uuid())
+  invoiceId   String          @map("invoice_id")
+  itemType    InvoiceItemType @map("item_type")
+  description String
+  quantity    Int             @default(1)
+  unitPrice   Decimal         @map("unit_price") @db.Decimal(10, 2)
+  total       Decimal         @db.Decimal(10, 2)
+  referenceId String?         @map("reference_id")
+
+  // Relations
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
+}
