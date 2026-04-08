@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { LogOut, User, ShoppingCart, Package, BarChart3, History, Settings, Boxes, Heart, ClipboardCheck, RotateCcw, Bell, ShieldAlert } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
+import { ROLE_LABELS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 const posNavItems = [
@@ -21,8 +22,10 @@ export function POSLayout() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    if (window.confirm('Are you sure you want to logout? Unsaved changes will be lost.')) {
+      logout();
+      navigate('/login');
+    }
   };
 
   return (
@@ -68,7 +71,7 @@ export function POSLayout() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-[var(--pos-text)] truncate">{user?.fullName}</p>
-            <p className="text-[11px] text-gray-500">Pharmacist</p>
+            <p className="text-[11px] text-gray-500">{ROLE_LABELS[user?.role || ''] || 'Pharmacist'}</p>
           </div>
           <button onClick={handleLogout} className="p-1.5 hover:bg-white/5 rounded transition-colors" title="Logout">
             <LogOut className="w-4 h-4 text-gray-500 hover:text-red-400 transition-colors" />

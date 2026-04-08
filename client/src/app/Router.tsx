@@ -103,7 +103,7 @@ function ProtectedRoute({ children, roles }: { children: ReactNode; roles: strin
 function GuestRoute({ children }: { children: ReactNode }) {
   const { isAuthenticated, user } = useAuthStore();
   if (isAuthenticated && user) {
-    return <Navigate to={ROLE_HOME_ROUTES[user.role] || '/'} replace />;
+    return <Navigate to={ROLE_HOME_ROUTES[user.role] || '/login'} replace />;
   }
   return <>{children}</>;
 }
@@ -186,6 +186,16 @@ const labSidebar: SidebarItem[] = [
   { label: 'Patient Search', path: '/lab/patients', icon: Search },
 ];
 
+// ─── SMART FALLBACK ─────────────────────────────────────────
+
+function SmartFallback() {
+  const { isAuthenticated, user } = useAuthStore();
+  if (isAuthenticated && user) {
+    return <Navigate to={ROLE_HOME_ROUTES[user.role] || '/login'} replace />;
+  }
+  return <Navigate to="/login" replace />;
+}
+
 // ─── ROUTER ─────────────────────────────────────────────────
 
 export function AppRouter() {
@@ -266,8 +276,11 @@ export function AppRouter() {
             <Route path="/pharmacy/settings" element={<PharmacySettings />} />
           </Route>
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          {/* Root route — redirect authenticated users to their home, others to login */}
+          <Route path="/" element={<SmartFallback />} />
+
+          {/* Fallback — same logic for unknown routes */}
+          <Route path="*" element={<SmartFallback />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

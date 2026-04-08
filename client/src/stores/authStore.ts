@@ -80,11 +80,23 @@ export const useAuthStore = create<AuthState>()(
           const res = await api.post('/auth/login', { email, password });
           const { token, user } = res.data.data;
           set({ user, token, isAuthenticated: true, isLoading: false });
-        } catch {
-          // API unavailable — fall back to demo mode
-          const demoUser = demoLogin(email, password);
-          if (demoUser) {
-            set({ user: demoUser, token: 'demo-token', isAuthenticated: true, isLoading: false });
+        } catch (error: unknown) {
+          // Only fall back to demo mode if the API is unreachable (network error).
+          // If the API responded with an actual error (401, 403, etc.), propagate it.
+          const isNetworkError =
+            error instanceof Error &&
+            'code' in error &&
+            ((error as { code?: string }).code === 'ERR_NETWORK' ||
+              !(error as { response?: unknown }).response);
+
+          if (isNetworkError) {
+            const demoUser = demoLogin(email, password);
+            if (demoUser) {
+              set({ user: demoUser, token: 'demo-token', isAuthenticated: true, isLoading: false });
+            } else {
+              set({ isLoading: false });
+              throw new Error('Invalid email or password');
+            }
           } else {
             set({ isLoading: false });
             throw new Error('Invalid email or password');
@@ -93,8 +105,11 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: () => {
+        const { token } = get();
         set({ user: null, token: null, isAuthenticated: false });
-        api.post('/auth/logout').catch(() => {});
+        if (token && token !== 'demo-token') {
+          api.post('/auth/logout', {}, { headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
+        }
       },
 
       fetchMe: async () => {
