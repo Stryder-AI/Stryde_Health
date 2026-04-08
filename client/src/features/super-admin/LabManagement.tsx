@@ -280,7 +280,7 @@ export function LabManagement() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
                   <h3 className="text-sm font-bold text-[var(--text-primary)] truncate">{template.name}</h3>
-                  <span className={`inline-block mt-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold ${categoryColors[template.category] || 'bg-gray-100 text-gray-600'}`}>
+                  <span className={`inline-block mt-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold ${categoryColors[template.category] || 'bg-[var(--surface)] text-[var(--text-secondary)]'}`}>
                     {template.category}
                   </span>
                 </div>
