@@ -78,18 +78,21 @@ export const useAuthStore = create<AuthState>()(
         try {
           // Try the real API first
           const res = await api.post('/auth/login', { email, password });
-          const { token, user } = res.data.data;
+          const token = res.data?.data?.token;
+          const user = res.data?.data?.user;
+          if (!token || !user) throw new Error('NO_BACKEND');
           set({ user, token, isAuthenticated: true, isLoading: false });
         } catch (error: unknown) {
-          // Only fall back to demo mode if the API is unreachable (network error).
-          // If the API responded with an actual error (401, 403, etc.), propagate it.
-          const isNetworkError =
-            error instanceof Error &&
-            'code' in error &&
-            ((error as { code?: string }).code === 'ERR_NETWORK' ||
-              !(error as { response?: unknown }).response);
+          // Fall back to demo mode if:
+          // 1. Network error (API unreachable)
+          // 2. API returned HTML/non-JSON (SPA rewrite on Vercel — no backend)
+          // 3. Response missing expected data structure
+          const err = error as { code?: string; response?: unknown; message?: string };
+          const isNetworkError = err.code === 'ERR_NETWORK' || !err.response;
+          const isNoBackend = err.message === 'NO_BACKEND';
+          const isSpaFallback = err.code === 'ERR_BAD_RESPONSE';
 
-          if (isNetworkError) {
+          if (isNetworkError || isNoBackend || isSpaFallback) {
             const demoUser = demoLogin(email, password);
             if (demoUser) {
               set({ user: demoUser, token: 'demo-token', isAuthenticated: true, isLoading: false });
