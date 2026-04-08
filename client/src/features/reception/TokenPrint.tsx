@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { Printer, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/Button';
@@ -19,7 +19,8 @@ export function TokenPrint({ open, onClose, tokenNumber, patientName, doctorName
 
   if (!open) return null;
 
-  const estimatedWait = `${Math.floor(Math.random() * 20) + 5} min`;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const estimatedWait = useMemo(() => `${Math.floor(Math.random() * 20) + 5} min`, [tokenNumber]);
   const qrData = `SHIFA:token:${tokenNumber}:${patientName}:${department}:${date}`;
 
   const handlePrint = () => {

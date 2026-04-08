@@ -121,8 +121,8 @@ export default function Appointments() {
             Today's Appointments
           </h1>
           <p className="text-sm text-[var(--text-secondary)] mt-1">
-            {demoAppointments.length} appointments &middot;{' '}
-            {demoAppointments.filter((a) => a.status === 'waiting').length} waiting
+            {filtered.length} appointments &middot;{' '}
+            {filtered.filter((a) => a.status === 'waiting').length} waiting
           </p>
         </div>
         <Badge variant="info" dot className="text-sm">

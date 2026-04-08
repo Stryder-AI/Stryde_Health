@@ -585,7 +585,15 @@ export function CompletedReports() {
                         <button
                           className="p-2 rounded-[var(--radius-xs)] hover:bg-[var(--surface)] transition-colors"
                           title="Download"
-                          onClick={(e) => { e.stopPropagation(); toast.success(`Report ${report.id} downloaded as PDF.`, 'Download Started'); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            generateLabReportPDF(report, 'Stryde Health Hospital', {
+                              name: report.patient,
+                              mrn: report.mrn,
+                              age: report.age,
+                              gender: report.gender,
+                            });
+                          }}
                         >
                           <Download className="w-4 h-4 text-[var(--text-tertiary)] hover:text-[var(--primary)]" />
                         </button>

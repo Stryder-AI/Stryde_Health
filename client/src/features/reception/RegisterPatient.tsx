@@ -182,6 +182,13 @@ export default function RegisterPatient() {
   const [phone, setPhone] = useState('');
   const [cnic, setCnic] = useState('');
   const [appointmentType, setAppointmentType] = useState<'walk_in' | 'scheduled'>('walk_in');
+  const [bloodGroup, setBloodGroup] = useState('');
+  const [address, setAddress] = useState('');
+  const [emergencyName, setEmergencyName] = useState('');
+  const [emergencyPhone, setEmergencyPhone] = useState('');
+  const [otherConditions, setOtherConditions] = useState('');
+  const [allergies, setAllergies] = useState('');
+  const [priority, setPriority] = useState('');
   const [checkedConditions, setCheckedConditions] = useState<Record<string, boolean>>({});
 
   // Validation errors
@@ -634,12 +641,14 @@ export default function RegisterPatient() {
                     success={touched.cnic && !errors.cnic && cnic.length > 0}
                     hint="Format: XXXXX-XXXXXXX-X (13 digits)"
                   />
-                  <Select label={t('patient.blood_group')} options={bloodGroupOptions} placeholder="Select" />
+                  <Select label={t('patient.blood_group')} options={bloodGroupOptions} placeholder="Select" value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)} />
                   <div className="md:col-span-2 lg:col-span-3">
                     <Input
                       label={t('patient.address')}
                       placeholder="House #, Street, City"
                       icon={<MapPin className="w-4 h-4" />}
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
                     />
                   </div>
                 </>
@@ -659,12 +668,14 @@ export default function RegisterPatient() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <Input label="Contact Name" placeholder="e.g. Ali Raza" />
+                <Input label="Contact Name" placeholder="e.g. Ali Raza" value={emergencyName} onChange={(e) => setEmergencyName(e.target.value)} />
                 <Input
                   label="Contact Phone"
                   placeholder="03XX-XXXXXXX"
                   icon={<Phone className="w-4 h-4" />}
                   hint="Format: 03XX-XXXXXXX"
+                  value={emergencyPhone}
+                  onChange={(e) => setEmergencyPhone(formatPhone(e.target.value))}
                 />
               </div>
             </CardContent>
@@ -693,8 +704,8 @@ export default function RegisterPatient() {
                 ))}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <Input label="Other Conditions" placeholder="Specify if any..." />
-                <Input label="Known Allergies" placeholder="e.g. Penicillin, Sulfa drugs" />
+                <Input label="Other Conditions" placeholder="Specify if any..." value={otherConditions} onChange={(e) => setOtherConditions(e.target.value)} />
+                <Input label="Known Allergies" placeholder="e.g. Penicillin, Sulfa drugs" value={allergies} onChange={(e) => setAllergies(e.target.value)} />
               </div>
             </CardContent>
           </Card>
@@ -755,6 +766,8 @@ export default function RegisterPatient() {
                   label="Priority"
                   options={priorityOptions}
                   placeholder="Select priority"
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value)}
                 />
               )}
 

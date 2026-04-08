@@ -59,8 +59,9 @@ const sampleColors: Record<string, string> = {
 
 // ─── Order Card ────────────────────────────────────────────────────────────
 
-function OrderCard({ order, index }: { order: LabOrder; index: number }) {
+function OrderCard({ order, index, onAccepted }: { order: LabOrder; index: number; onAccepted?: (id: string) => void }) {
   const [accepting, setAccepting] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const isPaid = order.paymentStatus === 'paid';
 
   const handleAccept = () => {
@@ -68,8 +69,12 @@ function OrderCard({ order, index }: { order: LabOrder; index: number }) {
     setTimeout(() => {
       toast.success(`Order ${order.id} accepted for processing`, 'Order Accepted');
       setAccepting(false);
+      setAccepted(true);
+      onAccepted?.(order.id);
     }, 800);
   };
+
+  if (accepted) return null;
 
   return (
     <div
@@ -216,7 +221,7 @@ export function PendingOrders() {
             Pending Orders
           </h1>
           <p className="text-sm text-[var(--text-secondary)] mt-1">
-            {demoOrders.length} orders in queue &middot; {urgentOrders.length} urgent
+            {filteredOrders.length} orders in queue &middot; {urgentOrders.length} urgent
           </p>
         </div>
         <div className="w-72">
