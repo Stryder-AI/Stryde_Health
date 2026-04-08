@@ -75,31 +75,38 @@ export const useAuthStore = create<AuthState>()(
 
       login: async (email: string, password: string) => {
         set({ isLoading: true });
+
+        // Attempt real API login, then fall back to demo users if no backend exists.
+        let useDemo = false;
         try {
-          // Try the real API first
           const res = await api.post('/auth/login', { email, password });
           const token = res.data?.data?.token;
           const user = res.data?.data?.user;
-          if (!token || !user) throw new Error('NO_BACKEND');
-          set({ user, token, isAuthenticated: true, isLoading: false });
+          if (!token || !user) {
+            // API returned 200 but no valid auth payload (e.g. Vercel SPA rewrite returning HTML)
+            useDemo = true;
+          } else {
+            set({ user, token, isAuthenticated: true, isLoading: false });
+            return;
+          }
         } catch (error: unknown) {
-          // Fall back to demo mode if:
-          // 1. Network error (API unreachable)
-          // 2. API returned HTML/non-JSON (SPA rewrite on Vercel — no backend)
-          // 3. Response missing expected data structure
-          const err = error as { code?: string; response?: unknown; message?: string };
-          const isNetworkError = err.code === 'ERR_NETWORK' || !err.response;
-          const isNoBackend = err.message === 'NO_BACKEND';
-          const isSpaFallback = err.code === 'ERR_BAD_RESPONSE';
+          const err = error as { code?: string; response?: { status?: number; data?: { message?: string } }; message?: string };
+          const status = err.response?.status;
 
-          if (isNetworkError || isNoBackend || isSpaFallback) {
-            const demoUser = demoLogin(email, password);
-            if (demoUser) {
-              set({ user: demoUser, token: 'demo-token', isAuthenticated: true, isLoading: false });
-            } else {
-              set({ isLoading: false });
-              throw new Error('Invalid email or password');
-            }
+          // Only propagate if the backend actually rejected the credentials (401/403).
+          // Any other error (network, 404, 405, 500, HTML response, etc.) means no backend → demo.
+          if (status === 401 || status === 403) {
+            const serverMsg = err.response?.data?.message || 'Invalid email or password';
+            set({ isLoading: false });
+            throw new Error(serverMsg);
+          }
+          useDemo = true;
+        }
+
+        if (useDemo) {
+          const demoUser = demoLogin(email, password);
+          if (demoUser) {
+            set({ user: demoUser, token: 'demo-token', isAuthenticated: true, isLoading: false });
           } else {
             set({ isLoading: false });
             throw new Error('Invalid email or password');
