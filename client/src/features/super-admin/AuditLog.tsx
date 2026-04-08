@@ -214,7 +214,7 @@ export function AuditLog() {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="default">{entry.role.replace('_', ' ')}</Badge>
+                      <Badge variant="default">{entry.role.replace(/_/g, ' ')}</Badge>
                     </TableCell>
                     <TableCell>
                       <Badge variant={config.variant}>

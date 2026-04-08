@@ -316,7 +316,7 @@ export function DoctorManagement() {
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {selectedDoctor.schedule.map((day) => (
-                  <div key={day.day} className="p-2.5 rounded-[var(--radius-xs)] border border-[var(--surface-border)] bg-white/50">
+                  <div key={day.day} className="p-2.5 rounded-[var(--radius-xs)] border border-[var(--surface-border)] bg-[var(--surface)]">
                     <p className="text-xs font-bold text-[var(--text-primary)]">{day.day}</p>
                     <p className="text-xs text-[var(--text-secondary)] mt-0.5">{day.hours}</p>
                     {day.slots > 0 && (

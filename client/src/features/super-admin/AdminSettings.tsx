@@ -311,7 +311,7 @@ export function AdminSettings() {
           <CardTitle>Accessibility</CardTitle>
         </div>
         <div className="space-y-4">
-          <div className="flex flex-wrap items-start justify-between gap-4 p-4 rounded-[var(--radius-sm)] border border-[var(--surface-border)] bg-[var(--surface)]/50">
+          <div className="flex flex-wrap items-start justify-between gap-4 p-4 rounded-[var(--radius-sm)] border border-[var(--surface-border)] bg-[var(--surface)]">
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-[var(--text-primary)]">Color-Blind Friendly Mode</p>
               <p className="text-xs text-[var(--text-secondary)] mt-0.5 max-w-md">
