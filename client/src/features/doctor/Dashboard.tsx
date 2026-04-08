@@ -233,7 +233,7 @@ export default function DoctorDashboard() {
             <div className="flex items-end justify-between gap-3 h-48 pt-4">
               {weeklyData.map((d, i) => {
                 const pct = d.max > 0 ? (d.count / d.max) * 100 : 0;
-                const isToday = i === new Date().getDay() - 1;
+                const isToday = i === (new Date().getDay() + 6) % 7;
                 return (
                   <div
                     key={d.day}

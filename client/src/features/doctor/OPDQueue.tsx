@@ -169,12 +169,15 @@ export default function OPDQueue() {
   const inProgress = patients.filter((p) => p.status === 'in_progress');
   const completed = patients.filter((p) => p.status === 'completed');
 
-  const filteredWaiting = waiting.filter(
-    (p) =>
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.mr.toLowerCase().includes(search.toLowerCase()) ||
-      p.token.toLowerCase().includes(search.toLowerCase())
-  );
+  const searchFilter = (p: typeof patients[0]) =>
+    !search ||
+    p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.mr.toLowerCase().includes(search.toLowerCase()) ||
+    p.token.toLowerCase().includes(search.toLowerCase());
+
+  const filteredWaiting = waiting.filter(searchFilter);
+  const filteredInProgress = inProgress.filter(searchFilter);
+  const filteredCompleted = completed.filter(searchFilter);
 
   const handleStartConsult = (id: string) => {
     setPatients((prev) =>
@@ -294,10 +297,10 @@ export default function OPDQueue() {
           <div className="flex items-center gap-2">
             <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />
             <h2 className="text-base font-semibold text-[var(--text-primary)]">In Progress</h2>
-            <Badge variant="in_progress">{inProgress.length}</Badge>
+            <Badge variant="in_progress">{filteredInProgress.length}</Badge>
           </div>
           <div className="space-y-3 stagger-children">
-            {inProgress.map((patient) => (
+            {filteredInProgress.map((patient) => (
               <PatientCard
                 key={patient.id}
                 patient={patient}
@@ -310,7 +313,7 @@ export default function OPDQueue() {
                 }
               />
             ))}
-            {inProgress.length === 0 && (
+            {filteredInProgress.length === 0 && (
               <div className="glass-card-static p-8 text-center border-2 border-dashed border-[var(--surface-border)]">
                 <p className="text-sm text-[var(--text-tertiary)]">No active consultation</p>
               </div>
@@ -323,10 +326,10 @@ export default function OPDQueue() {
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-emerald-500" />
             <h2 className="text-base font-semibold text-[var(--text-primary)]">Completed</h2>
-            <Badge variant="completed">{completed.length}</Badge>
+            <Badge variant="completed">{filteredCompleted.length}</Badge>
           </div>
           <div className="space-y-3 stagger-children">
-            {completed.map((patient) => (
+            {filteredCompleted.map((patient) => (
               <PatientCard
                 key={patient.id}
                 patient={patient}
@@ -338,7 +341,7 @@ export default function OPDQueue() {
                 }
               />
             ))}
-            {completed.length === 0 && (
+            {filteredCompleted.length === 0 && (
               <div className="glass-card-static p-8 text-center">
                 <p className="text-sm text-[var(--text-tertiary)]">No completed consults yet</p>
               </div>
@@ -694,7 +697,16 @@ function ConsultationSheet({
                   <CardContent>
                     {!isReadOnly && (
                       <VitalsTemplates
-                        onApply={(v) => setVitals(v)}
+                        onApply={(v) => setVitals((prev) => {
+                          // Merge: only overwrite fields that the template provides (non-empty)
+                          const merged = { ...prev };
+                          for (const [key, val] of Object.entries(v)) {
+                            if (val !== '' && val !== undefined) {
+                              (merged as Record<string, string>)[key] = val as string;
+                            }
+                          }
+                          return merged;
+                        })}
                       />
                     )}
                     <div className="space-y-3">

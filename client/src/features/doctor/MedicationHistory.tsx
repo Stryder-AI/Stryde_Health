@@ -147,7 +147,7 @@ export default function MedicationHistory({ pastMedicines, currentMedicines }: M
           {currentMedicines30d.length > 0 && (
             <div className="pt-3">
               <p className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500" />
                 Current Medications (last 30 days)
               </p>
               <div className="space-y-2">
@@ -165,7 +165,7 @@ export default function MedicationHistory({ pastMedicines, currentMedicines }: M
           {recentMedicines.length > 0 && (
             <div className={currentMedicines30d.length > 0 ? 'pt-2 border-t border-[var(--surface-border)]/50' : 'pt-3'}>
               <p className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-amber-400" />
+                <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
                 Recent Medications (last 3 months)
               </p>
               <div className="space-y-2">

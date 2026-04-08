@@ -326,7 +326,7 @@ export default function LabResults() {
             return (
               <TableRow
                 key={report.id}
-                className={report.criticalValues ? 'border-l-4 border-l-red-500 bg-red-50/30' : ''}
+                className={report.criticalValues ? 'border-l-4 border-l-red-500 bg-red-500/10' : ''}
               >
                 <TableCell>
                   <span className="text-xs text-[var(--text-secondary)]">{report.date}</span>
@@ -440,7 +440,7 @@ export default function LabResults() {
                         <tr
                           key={i}
                           className={`border-b border-[var(--surface-border)] ${
-                            isCritical ? 'bg-red-50/50' : ''
+                            isCritical ? 'bg-red-500/10' : ''
                           }`}
                         >
                           <td className="px-3 py-2.5 font-medium text-[var(--text-primary)]">

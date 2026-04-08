@@ -273,7 +273,7 @@ export default function DrugInteractionAlert({ medicines }: DrugInteractionAlert
                   interaction.severity === 'major'
                     ? isAcknowledged
                       ? 'border-emerald-500/30 bg-emerald-500/5'
-                      : 'border-red-500/40 bg-red-500/8'
+                      : 'border-red-500/40 bg-red-500/10'
                     : 'border-amber-500/30 bg-amber-500/5'
                 }`}
               >
