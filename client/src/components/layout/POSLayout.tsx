@@ -68,11 +68,11 @@ export function POSLayout() {
         <div className="px-4 py-2.5 border-t border-[var(--pos-border)]">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] text-gray-500">Product of</span>
-            <img src="/techgis-logo-long.png" alt="TechGIS" className="h-3.5 object-contain opacity-60" />
+            <img src="/stryde-icon.png" alt="STRYDE Technologies" className="h-4 object-contain opacity-70" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-gray-500">Powered By:</span>
-            <img src="/stryde-logo-type.png" alt="STRYDE Technologies" className="h-3.5 object-contain opacity-60" />
+            <img src="/techgis-icon.png" alt="TechGIS" className="h-4 object-contain opacity-70" />
           </div>
         </div>
 

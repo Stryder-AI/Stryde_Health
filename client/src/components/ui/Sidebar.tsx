@@ -239,11 +239,11 @@ export function Sidebar({ items, title, subtitle }: SidebarProps) {
         <div className="px-4 py-2.5 border-t border-[var(--surface-border)]">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] text-[var(--text-tertiary)]">Product of</span>
-            <img src="/techgis-logo-long.png" alt="TechGIS" className="h-3.5 object-contain opacity-70" />
+            <img src="/stryde-icon.png" alt="STRYDE Technologies" className="h-4 object-contain opacity-80" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-[var(--text-tertiary)]">Powered By:</span>
-            <img src="/stryde-logo-type.png" alt="STRYDE Technologies" className="h-3.5 object-contain opacity-70" />
+            <img src="/techgis-icon.png" alt="TechGIS" className="h-4 object-contain opacity-80" />
           </div>
         </div>
       )}
@@ -360,11 +360,11 @@ export function Sidebar({ items, title, subtitle }: SidebarProps) {
         <div className="px-6 py-2.5 border-t border-[var(--surface-border)]">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] text-[var(--text-tertiary)]">Product of</span>
-            <img src="/techgis-logo-long.png" alt="TechGIS" className="h-3.5 object-contain opacity-70" />
+            <img src="/stryde-icon.png" alt="STRYDE Technologies" className="h-4 object-contain opacity-80" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-[var(--text-tertiary)]">Powered By:</span>
-            <img src="/stryde-logo-type.png" alt="STRYDE Technologies" className="h-3.5 object-contain opacity-70" />
+            <img src="/techgis-icon.png" alt="TechGIS" className="h-4 object-contain opacity-80" />
           </div>
         </div>
       </aside>
