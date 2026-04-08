@@ -481,7 +481,7 @@ export function Returns() {
       {confirmModal && selectedSale && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setConfirmModal(false); }}>
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-          <div className="relative w-full max-w-md bg-[#141c2e] border border-[var(--pos-border)] rounded-2xl shadow-2xl overflow-hidden animate-fade-in" style={{ animationDuration: '0.2s' }}>
+          <div className="relative w-full max-w-md bg-[var(--pos-card)] border border-[var(--pos-border)] rounded-2xl shadow-2xl overflow-hidden animate-fade-in" style={{ animationDuration: '0.2s' }}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--pos-border)]">
               <h2 className="text-base font-bold text-[var(--pos-text)]">Confirm Return</h2>
               <button onClick={() => setConfirmModal(false)} className="p-1.5 rounded-lg hover:bg-white/5">

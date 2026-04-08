@@ -27,7 +27,7 @@ interface ExpiryItem {
 
 type ExpiryStatus = 'expired' | 'lt30' | 'lt60' | 'ok';
 
-const TODAY = new Date('2026-04-07');
+const TODAY = new Date();
 
 function daysUntilExpiry(dateStr: string): number {
   return Math.ceil((new Date(dateStr).getTime() - TODAY.getTime()) / (1000 * 60 * 60 * 24));
@@ -89,7 +89,7 @@ function ConfirmWriteOff({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative w-full max-w-sm bg-[#141c2e] border border-[var(--pos-border)] rounded-2xl shadow-2xl p-6">
+      <div className="relative w-full max-w-sm bg-[var(--pos-card)] border border-[var(--pos-border)] rounded-2xl shadow-2xl p-6">
         <div className="flex items-start gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
             <AlertTriangle className="w-5 h-5 text-red-400" />
@@ -224,7 +224,7 @@ export function ExpiryAlerts() {
       <div className="flex-1 overflow-auto px-5 pb-5">
         <table className="w-full">
           <thead className="sticky top-0 z-10">
-            <tr className="bg-[#0d1527] border-b border-[var(--pos-border)]">
+            <tr className="bg-[var(--pos-surface)] border-b border-[var(--pos-border)]">
               {['Product', 'Batch #', 'Stock Qty', 'Expiry Date', 'Status', 'Actions'].map((h) => (
                 <th key={h} className="px-4 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wider text-left">{h}</th>
               ))}

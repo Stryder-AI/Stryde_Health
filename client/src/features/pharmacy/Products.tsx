@@ -176,7 +176,7 @@ export function Products() {
         <div className="flex-1 overflow-auto">
           <table className="w-full">
             <thead className="sticky top-0 z-10">
-              <tr className="bg-[#0d1527] border-b border-[var(--pos-border)]">
+              <tr className="bg-[var(--pos-surface)] border-b border-[var(--pos-border)]">
                 {['Code', 'Product Name', 'Generic Name', 'Group', 'Cost', 'Sale Price', 'Stock', 'Unit', 'Expiry', 'Active', ''].map((h) => (
                   <th key={h} className="px-4 py-2.5 text-[11px] font-semibold text-gray-500 uppercase tracking-wider text-left whitespace-nowrap">
                     {h}
@@ -217,7 +217,7 @@ export function Products() {
                   <td className="px-4 py-2.5 text-sm text-gray-500">{product.unit}</td>
                   <td className="px-4 py-2.5">
                     {product.expiryDate ? (() => {
-                      const today = new Date('2026-04-07');
+                      const today = new Date();
                       const exp = new Date(product.expiryDate);
                       const days = Math.ceil((exp.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
                       const fmt = exp.toLocaleDateString('en-PK', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -332,7 +332,7 @@ function ProductFormModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative w-full max-w-2xl bg-[#141c2e] border border-[var(--pos-border)] rounded-2xl shadow-2xl animate-fade-in overflow-hidden" style={{ animationDuration: '0.2s' }}>
+      <div className="relative w-full max-w-2xl bg-[var(--pos-card)] border border-[var(--pos-border)] rounded-2xl shadow-2xl animate-fade-in overflow-hidden" style={{ animationDuration: '0.2s' }}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--pos-border)]">
           <h2 className="text-lg font-bold text-[var(--pos-text)]">{product ? 'Edit Product' : 'New Product'}</h2>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5"><X className="w-5 h-5 text-gray-400" /></button>

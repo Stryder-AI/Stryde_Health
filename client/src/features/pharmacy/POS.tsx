@@ -159,10 +159,10 @@ export function POS() {
   // ------- Cart Calculations -------
   const subtotal = cart.reduce((sum, item) => sum + item.product.price * item.qty, 0);
   const itemDiscounts = cart.reduce((sum, item) => sum + item.discount * item.qty, 0);
-  const totalDiscount = itemDiscounts + saleDiscount;
+  const totalDiscount = Math.min(itemDiscounts + saleDiscount, subtotal);
   const taxRate = 0; // Can be configured
-  const taxAmount = (subtotal - totalDiscount) * taxRate;
-  const total = subtotal - totalDiscount + taxAmount;
+  const taxAmount = Math.max(0, subtotal - totalDiscount) * taxRate;
+  const total = Math.max(0, subtotal - totalDiscount + taxAmount);
 
   // ------- Search -------
   useEffect(() => {
@@ -188,9 +188,17 @@ export function POS() {
     setCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
+        if (existing.qty >= product.stock) {
+          toast.warning(`Only ${product.stock} ${product.unit} of ${product.name} in stock`);
+          return prev;
+        }
         return prev.map((item) =>
           item.product.id === product.id ? { ...item, qty: item.qty + 1 } : item
         );
+      }
+      if (product.stock <= 0) {
+        toast.warning(`${product.name} is out of stock`);
+        return prev;
       }
       return [...prev, { product, qty: 1, discount: 0 }];
     });
@@ -291,7 +299,7 @@ export function POS() {
   // ------- Payment -------
   const openPayment = () => {
     if (cart.length === 0) return;
-    setAmountReceived(total.toFixed(2));
+    setAmountReceived('');
     setPaymentModal(true);
   };
 
@@ -820,7 +828,7 @@ export function POS() {
       {paymentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setPaymentModal(false); }}>
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-          <div className="relative w-full max-w-md bg-[#141c2e] border border-[var(--pos-border)] rounded-2xl shadow-2xl overflow-hidden animate-fade-in" style={{ animationDuration: '0.2s' }}>
+          <div className="relative w-full max-w-md bg-[var(--pos-card)] border border-[var(--pos-border)] rounded-2xl shadow-2xl overflow-hidden animate-fade-in" style={{ animationDuration: '0.2s' }}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--pos-border)]">
               <h2 className="text-lg font-bold text-[var(--pos-text)]">Complete Payment</h2>
               <button onClick={() => setPaymentModal(false)} className="p-1.5 rounded-lg hover:bg-white/5"><X className="w-5 h-5 text-gray-400" /></button>
@@ -859,7 +867,9 @@ export function POS() {
                     type="number"
                     value={amountReceived}
                     onChange={(e) => setAmountReceived(e.target.value)}
-                    className="w-full h-14 px-4 rounded-xl bg-[var(--pos-card)] border border-[var(--pos-border)] text-2xl font-bold text-[var(--pos-text)] text-center tabular-nums focus:outline-none focus:border-[var(--pos-accent)]"
+                    onFocus={(e) => e.target.select()}
+                    placeholder={total.toFixed(0)}
+                    className="w-full h-14 px-4 rounded-xl bg-[var(--pos-card)] border border-[var(--pos-border)] text-2xl font-bold text-[var(--pos-text)] text-center tabular-nums focus:outline-none focus:border-[var(--pos-accent)] placeholder:text-gray-600"
                     autoFocus
                   />
                   {/* Quick amounts */}
@@ -909,7 +919,7 @@ export function POS() {
       {completedModal && receiptData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-          <div className="relative w-full max-w-sm bg-[#141c2e] border border-[var(--pos-border)] rounded-2xl shadow-2xl overflow-hidden animate-fade-in" style={{ animationDuration: '0.2s' }}>
+          <div className="relative w-full max-w-sm bg-[var(--pos-card)] border border-[var(--pos-border)] rounded-2xl shadow-2xl overflow-hidden animate-fade-in" style={{ animationDuration: '0.2s' }}>
             <div className="text-center pt-8 pb-4">
               <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-8 h-8 text-emerald-400" />
@@ -1047,7 +1057,7 @@ function ModalOverlay({ onClose, title, children }: { onClose: () => void; title
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative w-full max-w-sm bg-[#141c2e] border border-[var(--pos-border)] rounded-2xl shadow-2xl p-5 animate-fade-in" style={{ animationDuration: '0.2s' }}>
+      <div className="relative w-full max-w-sm bg-[var(--pos-card)] border border-[var(--pos-border)] rounded-2xl shadow-2xl p-5 animate-fade-in" style={{ animationDuration: '0.2s' }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-bold text-[var(--pos-text)]">{title}</h3>
           <button onClick={onClose} className="p-1 rounded hover:bg-white/5"><X className="w-4 h-4 text-gray-400" /></button>
