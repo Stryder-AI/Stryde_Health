@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type FormEvent, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Mail, Lock, Eye, EyeOff, ArrowRight, AlertTriangle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertTriangle } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -125,8 +125,8 @@ export function LoginPage() {
 
           {/* Brand */}
           <div className="text-center mb-8 relative">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--primary)] to-teal-400 mb-5 shadow-lg shadow-[var(--primary-glow)] hover:scale-105 transition-transform duration-300">
-              <Heart className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-5 shadow-lg shadow-[var(--primary-glow)] hover:scale-105 transition-transform duration-300 overflow-hidden">
+              <img src="/stryde-logo.png" alt="Stryde Health" className="w-16 h-16 object-contain" />
             </div>
             <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Stryde Health</h1>
             <p className="text-sm text-[var(--text-secondary)] mt-1.5">Intelligent Hospital Management</p>
@@ -213,21 +213,21 @@ export function LoginPage() {
 
           {/* Demo credentials */}
           <div className="mt-6 p-3 rounded-[var(--radius-sm)] bg-[var(--surface)] border border-[var(--surface-border)]">
-            <p className="text-[11px] text-[var(--text-tertiary)] mb-2 text-center">Demo Logins <span className="text-[var(--text-tertiary)]">(password: password123)</span></p>
+            <p className="text-[11px] text-[var(--text-tertiary)] mb-2 text-center">Demo Logins <span className="text-[var(--text-tertiary)]">(password: password)</span></p>
             <div className="grid grid-cols-2 gap-1.5">
               {[
                 { label: 'Admin', email: 'admin@strydehealth.com' },
-                { label: 'Reception', email: 'ayesha@strydehealth.com' },
-                { label: 'Doctor', email: 'tariq@strydehealth.com' },
-                { label: 'Lab Tech', email: 'hamza@strydehealth.com' },
-                { label: 'Pharmacist', email: 'bilal@strydehealth.com' },
+                { label: 'Reception', email: 'receptionist@strydehealth.com' },
+                { label: 'Doctor', email: 'doctor@strydehealth.com' },
+                { label: 'Lab Tech', email: 'lab@strydehealth.com' },
+                { label: 'Pharmacist', email: 'pharmacist@strydehealth.com' },
               ].map((cred) => (
                 <button
                   key={cred.email}
                   type="button"
                   onClick={() => {
                     setEmail(cred.email);
-                    setPassword('password123');
+                    setPassword('password');
                     setEmailError(null);
                     setPasswordError(null);
                   }}

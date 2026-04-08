@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LogOut, User, ShoppingCart, Package, BarChart3, History, Settings, Boxes, Heart, ClipboardCheck, RotateCcw, Bell, ShieldAlert } from 'lucide-react';
+import { LogOut, User, ShoppingCart, Package, BarChart3, History, Settings, Boxes, ClipboardCheck, RotateCcw, Bell, ShieldAlert } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { ROLE_LABELS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
@@ -34,8 +34,8 @@ export function POSLayout() {
       <aside className="w-56 h-screen flex flex-col bg-[var(--pos-surface)] border-r border-[var(--pos-border)] shrink-0">
         <div className="px-5 py-4 border-b border-[var(--pos-border)]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--pos-accent)] flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 rounded-lg overflow-hidden">
+              <img src="/stryde-logo.png" alt="Stryde Pharmacy" className="w-full h-full object-contain" />
             </div>
             <div>
               <h1 className="text-sm font-bold text-[var(--pos-accent)]">Stryde Pharmacy</h1>
@@ -63,6 +63,18 @@ export function POSLayout() {
             </NavLink>
           ))}
         </nav>
+
+        {/* Branding */}
+        <div className="px-4 py-2.5 border-t border-[var(--pos-border)]">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] text-gray-500">Product of</span>
+            <img src="/techgis-logo-long.png" alt="TechGIS" className="h-3.5 object-contain opacity-60" />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-gray-500">Powered By:</span>
+            <img src="/stryde-logo-type.png" alt="STRYDE Technologies" className="h-3.5 object-contain opacity-60" />
+          </div>
+        </div>
 
         {/* User */}
         <div className="px-4 py-3 border-t border-[var(--pos-border)] flex items-center gap-3">

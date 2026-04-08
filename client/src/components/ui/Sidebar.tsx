@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback, useEffect, useRef } f
 import { createPortal } from 'react-dom';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Heart, ChevronLeft, X } from 'lucide-react';
+import { ChevronLeft, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useLanguageStore } from '@/stores/languageStore';
 
@@ -160,8 +160,8 @@ export function Sidebar({ items, title, subtitle }: SidebarProps) {
           collapsed ? 'px-3 py-5 justify-center' : 'px-6 py-5 gap-3'
         )}
       >
-        <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--primary)] flex items-center justify-center shadow-md shrink-0">
-          <Heart className="w-5 h-5 text-white" />
+        <div className="w-9 h-9 rounded-[var(--radius-sm)] overflow-hidden shadow-md shrink-0">
+          <img src="/stryde-logo.png" alt="Stryde Health" className="w-full h-full object-contain" />
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
@@ -234,7 +234,21 @@ export function Sidebar({ items, title, subtitle }: SidebarProps) {
         )}
       </nav>
 
-      {/* Footer + collapse toggle */}
+      {/* Branding footer */}
+      {!collapsed && (
+        <div className="px-4 py-2.5 border-t border-[var(--surface-border)]">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] text-[var(--text-tertiary)]">Product of</span>
+            <img src="/techgis-logo-long.png" alt="TechGIS" className="h-3.5 object-contain opacity-70" />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-[var(--text-tertiary)]">Powered By:</span>
+            <img src="/stryde-logo-type.png" alt="STRYDE Technologies" className="h-3.5 object-contain opacity-70" />
+          </div>
+        </div>
+      )}
+
+      {/* Collapse toggle */}
       <div
         className={cn(
           'border-t border-[var(--surface-border)] flex items-center',
@@ -288,8 +302,8 @@ export function Sidebar({ items, title, subtitle }: SidebarProps) {
         {/* Brand row with close */}
         <div className="px-6 py-5 border-b border-[var(--surface-border)] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--primary)] flex items-center justify-center shadow-md">
-              <Heart className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-[var(--radius-sm)] overflow-hidden shadow-md">
+              <img src="/stryde-logo.png" alt="Stryde Health" className="w-full h-full object-contain" />
             </div>
             <div>
               <h1 className="text-base font-bold text-[var(--text-primary)] tracking-tight">{title}</h1>
@@ -343,8 +357,15 @@ export function Sidebar({ items, title, subtitle }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="px-6 py-3 border-t border-[var(--surface-border)]">
-          <p className="text-[11px] text-[var(--text-tertiary)]">Stryde Health v1.0</p>
+        <div className="px-6 py-2.5 border-t border-[var(--surface-border)]">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[10px] text-[var(--text-tertiary)]">Product of</span>
+            <img src="/techgis-logo-long.png" alt="TechGIS" className="h-3.5 object-contain opacity-70" />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-[var(--text-tertiary)]">Powered By:</span>
+            <img src="/stryde-logo-type.png" alt="STRYDE Technologies" className="h-3.5 object-contain opacity-70" />
+          </div>
         </div>
       </aside>
     </>,

@@ -28,32 +28,32 @@ interface AuthState {
 
 const DEMO_USERS: Record<string, { password: string; user: User }> = {
   'admin@strydehealth.com': {
-    password: 'password123',
+    password: 'password',
     user: { id: '1', email: 'admin@strydehealth.com', fullName: 'Admin User', role: 'super_admin', department: 'Administration', specialization: null, avatarUrl: null },
   },
-  'ayesha@strydehealth.com': {
-    password: 'password123',
-    user: { id: '2', email: 'ayesha@strydehealth.com', fullName: 'Ayesha Khan', role: 'receptionist', department: 'Front Desk', specialization: null, avatarUrl: null },
+  'receptionist@strydehealth.com': {
+    password: 'password',
+    user: { id: '2', email: 'receptionist@strydehealth.com', fullName: 'Ayesha Khan', role: 'receptionist', department: 'Front Desk', specialization: null, avatarUrl: null },
   },
-  'tariq@strydehealth.com': {
-    password: 'password123',
-    user: { id: '3', email: 'tariq@strydehealth.com', fullName: 'Dr. Tariq Ahmed', role: 'doctor', department: 'Cardiology', specialization: 'Cardiologist', avatarUrl: null },
+  'doctor@strydehealth.com': {
+    password: 'password',
+    user: { id: '3', email: 'doctor@strydehealth.com', fullName: 'Dr. Tariq Ahmed', role: 'doctor', department: 'Cardiology', specialization: 'Cardiologist', avatarUrl: null },
   },
-  'saira@strydehealth.com': {
-    password: 'password123',
-    user: { id: '4', email: 'saira@strydehealth.com', fullName: 'Dr. Saira Khan', role: 'doctor', department: 'General Medicine', specialization: 'General Physician', avatarUrl: null },
+  'doctor2@strydehealth.com': {
+    password: 'password',
+    user: { id: '4', email: 'doctor2@strydehealth.com', fullName: 'Dr. Saira Khan', role: 'doctor', department: 'General Medicine', specialization: 'General Physician', avatarUrl: null },
   },
-  'imran@strydehealth.com': {
-    password: 'password123',
-    user: { id: '5', email: 'imran@strydehealth.com', fullName: 'Dr. Imran Malik', role: 'doctor', department: 'Orthopedics', specialization: 'Orthopedic Surgeon', avatarUrl: null },
+  'doctor3@strydehealth.com': {
+    password: 'password',
+    user: { id: '5', email: 'doctor3@strydehealth.com', fullName: 'Dr. Imran Malik', role: 'doctor', department: 'Orthopedics', specialization: 'Orthopedic Surgeon', avatarUrl: null },
   },
-  'hamza@strydehealth.com': {
-    password: 'password123',
-    user: { id: '6', email: 'hamza@strydehealth.com', fullName: 'Hamza Ali', role: 'lab_technician', department: 'Pathology', specialization: null, avatarUrl: null },
+  'lab@strydehealth.com': {
+    password: 'password',
+    user: { id: '6', email: 'lab@strydehealth.com', fullName: 'Hamza Ali', role: 'lab_technician', department: 'Pathology', specialization: null, avatarUrl: null },
   },
-  'bilal@strydehealth.com': {
-    password: 'password123',
-    user: { id: '7', email: 'bilal@strydehealth.com', fullName: 'Bilal Shah', role: 'pharmacist', department: 'Pharmacy', specialization: null, avatarUrl: null },
+  'pharmacist@strydehealth.com': {
+    password: 'password',
+    user: { id: '7', email: 'pharmacist@strydehealth.com', fullName: 'Bilal Shah', role: 'pharmacist', department: 'Pharmacy', specialization: null, avatarUrl: null },
   },
 };
 
