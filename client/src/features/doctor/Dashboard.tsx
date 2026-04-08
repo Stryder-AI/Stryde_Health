@@ -11,14 +11,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { toast } from '@/components/ui/Toast';
 import PatientHoverCard, { type PatientPreview } from '@/components/ui/PatientHoverCard';
-
-// ── Demo Data ─────────────────────────────────────────────────
-
-const doctor = {
-  name: 'Dr. Tariq Ahmed',
-  specialty: 'Cardiologist',
-  department: 'Cardiology',
-};
+import { useAuthStore } from '@/stores/authStore';
 
 // ── Greeting intelligence ────────────────────────────────────
 
@@ -27,7 +20,7 @@ function getGreeting(): { text: string; icon: typeof Sun; iconClass: string } {
   if (h >= 5 && h < 12) return { text: 'Good morning', icon: Sun, iconClass: 'text-amber-400' };
   if (h >= 12 && h < 17) return { text: 'Good afternoon', icon: Cloud, iconClass: 'text-sky-400' };
   if (h >= 17 && h < 21) return { text: 'Good evening', icon: Cloud, iconClass: 'text-orange-400' };
-  return { text: 'Working late? Good night,', icon: Moon, iconClass: 'text-indigo-400' };
+  return { text: 'Working late? Good night', icon: Moon, iconClass: 'text-indigo-400' };
 }
 
 const INSIGHT_MESSAGES = [
@@ -134,6 +127,12 @@ function getFollowUpStatus(days: number): { label: string; variant: string; colo
 
 export default function DoctorDashboard() {
   const navigate = useNavigate();
+  const user = useAuthStore((s) => s.user);
+  const doctor = {
+    name: user?.fullName || 'Doctor',
+    specialty: user?.specialization || 'Specialist',
+    department: user?.department || 'Department',
+  };
   const [selectedDay] = useState<number | null>(null);
   const greeting = getGreeting();
   const GreetIcon = greeting.icon;

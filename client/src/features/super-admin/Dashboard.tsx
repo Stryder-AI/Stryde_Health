@@ -76,7 +76,7 @@ function getAdminGreeting(): { text: string; icon: typeof Sun; iconClass: string
   if (h >= 5 && h < 12) return { text: 'Good morning', icon: Sun, iconClass: 'text-amber-400' };
   if (h >= 12 && h < 17) return { text: 'Good afternoon', icon: Cloud, iconClass: 'text-sky-400' };
   if (h >= 17 && h < 21) return { text: 'Good evening', icon: Cloud, iconClass: 'text-orange-400' };
-  return { text: 'Working late? Good night,', icon: Moon, iconClass: 'text-indigo-400' };
+  return { text: 'Working late? Good night', icon: Moon, iconClass: 'text-indigo-400' };
 }
 
 const today = new Date().toLocaleDateString('en-PK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });

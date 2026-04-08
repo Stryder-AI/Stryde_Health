@@ -471,8 +471,8 @@ export default function Billing() {
                   {/* Change */}
                   {parseFloat(amountReceived) > 0 && (
                     <div className="flex items-center justify-between p-3 rounded-[var(--radius-sm)] bg-[var(--success-bg)]">
-                      <span className="text-sm font-medium text-emerald-700">Change</span>
-                      <span className="text-lg font-bold text-emerald-700 tabular-nums">
+                      <span className="text-sm font-medium text-[var(--success)] dark:text-emerald-400">Change</span>
+                      <span className="text-lg font-bold text-[var(--success)] dark:text-emerald-400 tabular-nums">
                         Rs. {change.toLocaleString()}
                       </span>
                     </div>

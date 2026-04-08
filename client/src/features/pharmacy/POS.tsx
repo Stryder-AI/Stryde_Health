@@ -6,6 +6,8 @@ import {
   ScanBarcode,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuthStore } from '@/stores/authStore';
+import { toast } from '@/components/ui/Toast';
 import { Receipt, type ReceiptData } from './Receipt';
 
 /* ------------------------------------------------------------------ */
@@ -111,6 +113,7 @@ function generateSaleNumber() {
 /* ------------------------------------------------------------------ */
 
 export function POS() {
+  const user = useAuthStore((s) => s.user);
   // Search
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Product[]>([]);
@@ -180,6 +183,22 @@ export function POS() {
     setShowResults(results.length > 0);
   }, [searchTerm]);
 
+  // ------- Cart Actions -------
+  const addToCart = useCallback((product: Product) => {
+    setCart((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.product.id === product.id ? { ...item, qty: item.qty + 1 } : item
+        );
+      }
+      return [...prev, { product, qty: 1, discount: 0 }];
+    });
+    setSearchTerm('');
+    setShowResults(false);
+    setActiveTab('cart');
+  }, []);
+
   // ------- Barcode Scanner Handler -------
   const handleBarcodeScan = useCallback((barcode: string) => {
     const trimmed = barcode.trim();
@@ -222,22 +241,6 @@ export function POS() {
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
-
-  // ------- Cart Actions -------
-  const addToCart = useCallback((product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.product.id === product.id ? { ...item, qty: item.qty + 1 } : item
-        );
-      }
-      return [...prev, { product, qty: 1, discount: 0 }];
-    });
-    setSearchTerm('');
-    setShowResults(false);
-    setActiveTab('cart');
   }, []);
 
   const updateQty = (productId: string, delta: number) => {
@@ -300,7 +303,7 @@ export function POS() {
       saleNumber: generateSaleNumber(),
       date: new Date().toLocaleDateString('en-PK'),
       time: new Date().toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' }),
-      cashier: 'Pharmacist Ali',
+      cashier: user?.fullName || 'Pharmacist',
       customer: customer || undefined,
       items: cart.map((item) => ({
         name: item.product.name,
@@ -766,7 +769,7 @@ export function POS() {
               { label: 'Discount', shortcut: 'F2', icon: Percent, action: () => cart.length > 0 && setDiscountModal(true) },
               { label: 'Comment', shortcut: 'F3', icon: MessageSquare, action: () => setCommentModal(true) },
               { label: 'Customer', shortcut: 'F4', icon: User, action: () => setCustomerModal(true) },
-              { label: 'Save Sale', shortcut: 'F9', icon: Save, action: () => {} },
+              { label: 'Save Sale', shortcut: 'F9', icon: Save, action: () => { if (cart.length > 0) { toast.success('Sale saved as draft'); } } },
             ]).map((action) => (
               <button
                 key={action.label}

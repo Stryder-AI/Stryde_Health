@@ -17,3 +17,5 @@ Thumbs.db
 *.tsbuildinfo
 client/.vite/
 .claude/
+
+.vercel

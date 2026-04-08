@@ -123,7 +123,7 @@ export function UserManagement() {
               <TableCell>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => toast.info(`Edit profile for ${user.name}`)}
+                    onClick={() => toast.info(`Edit profile for ${user.fullName}`)}
                     className="p-1.5 rounded-[var(--radius-xs)] hover:bg-[var(--surface)] transition-colors"
                     title="Edit"
                   >

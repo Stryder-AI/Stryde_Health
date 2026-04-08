@@ -23,9 +23,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            'w-full rounded-[var(--radius-sm)] border border-gray-200 bg-white/70 px-3 py-2 text-sm',
-            'transition-colors duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent',
+            'w-full rounded-[var(--radius-sm)] border border-[var(--surface-border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-primary)]',
+            'transition-all duration-200',
+            'hover:border-[var(--surface-border-hover)] hover:bg-[var(--surface-hover)]',
+            'focus:outline-none focus:border-[var(--primary)] focus:bg-[var(--surface-hover)] focus:shadow-[0_0_0_3px_var(--primary-glow)]',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             error && 'border-[var(--danger)] focus:ring-[var(--danger)]',
             className

@@ -160,7 +160,7 @@ function EmptyIllustration({ type, size }: { type: EmptyStateType; size: EmptySt
 
           {/* Rotating pill */}
           <g style={{ transformOrigin: '115px 68px', animation: 'es-spin 4s linear infinite' }}>
-            <ellipse cx="115" cy="68" rx="14" ry="8" rx2="14" fill="none" stroke={accent} strokeWidth="1.5" strokeOpacity="0.3" transform="rotate(-35, 115, 68)" />
+            <ellipse cx="115" cy="68" rx="14" ry="8" fill="none" stroke={accent} strokeWidth="1.5" strokeOpacity="0.3" transform="rotate(-35, 115, 68)" />
             <ellipse cx="115" cy="68" rx="6.5" ry="8" fill={accent} fillOpacity="0.12" transform="rotate(-35, 115, 68)" clipPath="none" />
             <line x1="104.5" y1="72" x2="125.5" y2="64" stroke={accent} strokeWidth="1" strokeOpacity="0.25" />
           </g>
