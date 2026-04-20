@@ -128,7 +128,7 @@ export function StockAlerts() {
             <span className="text-xs text-gray-500 uppercase tracking-wider">Critical</span>
           </div>
           <p className="text-2xl font-bold text-red-400 tabular-nums">{criticalCount}</p>
-          <p className="text-xs text-gray-600 mt-0.5">Out of stock</p>
+          <p className="text-xs text-gray-500 mt-0.5">Out of stock</p>
         </button>
         <button
           onClick={() => setFilterSeverity(filterSeverity === 'low' ? 'all' : 'low')}
@@ -142,7 +142,7 @@ export function StockAlerts() {
             <span className="text-xs text-gray-500 uppercase tracking-wider">Low</span>
           </div>
           <p className="text-2xl font-bold text-amber-400 tabular-nums">{lowCount}</p>
-          <p className="text-xs text-gray-600 mt-0.5">Below half reorder level</p>
+          <p className="text-xs text-gray-500 mt-0.5">Below half reorder level</p>
         </button>
         <button
           onClick={() => setFilterSeverity(filterSeverity === 'warning' ? 'all' : 'warning')}
@@ -156,7 +156,7 @@ export function StockAlerts() {
             <span className="text-xs text-gray-500 uppercase tracking-wider">Warning</span>
           </div>
           <p className="text-2xl font-bold text-yellow-400 tabular-nums">{warningCount}</p>
-          <p className="text-xs text-gray-600 mt-0.5">Below reorder level</p>
+          <p className="text-xs text-gray-500 mt-0.5">Below reorder level</p>
         </button>
       </div>
 
@@ -218,19 +218,19 @@ export function StockAlerts() {
                   {/* Stock Details */}
                   <div className="grid grid-cols-4 gap-4 mt-3">
                     <div>
-                      <p className="text-[10px] text-gray-600 uppercase tracking-wider">Current</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Current</p>
                       <p className={cn('text-sm font-bold tabular-nums', config.text)}>{item.currentQty} {item.unit}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-600 uppercase tracking-wider">Reorder Level</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Reorder Level</p>
                       <p className="text-sm font-semibold text-gray-300 tabular-nums">{item.reorderLevel} {item.unit}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-600 uppercase tracking-wider">Suggested Order</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Suggested Order</p>
                       <p className="text-sm font-semibold text-[var(--pos-accent)] tabular-nums">{suggested} {item.unit}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-gray-600 uppercase tracking-wider">Est. Cost</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">Est. Cost</p>
                       <p className="text-sm font-semibold text-gray-300 tabular-nums">Rs. {estCost.toLocaleString('en-PK')}</p>
                     </div>
                   </div>
@@ -243,7 +243,7 @@ export function StockAlerts() {
                         style={{ width: `${Math.min((item.currentQty / item.reorderLevel) * 100, 100)}%` }}
                       />
                     </div>
-                    <p className="text-[10px] text-gray-600 mt-1">
+                    <p className="text-[10px] text-gray-500 mt-1">
                       {item.currentQty === 0 ? 'Out of stock' : `${Math.round((item.currentQty / item.reorderLevel) * 100)}% of reorder level`}
                     </p>
                   </div>

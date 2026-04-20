@@ -123,28 +123,21 @@ export function PharmacyDashboard() {
           </div>
         </div>
 
-        {/* Low Stock Alerts */}
+        {/* Recent Sales Summary */}
         <div className="bg-[var(--pos-surface)]/80 backdrop-blur-md border border-[var(--pos-border)] rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
-            <h2 className="text-sm font-semibold text-[var(--pos-text)]">Low Stock Alerts</h2>
-          </div>
+          <h2 className="text-sm font-semibold text-[var(--pos-text)] mb-1">Recent Sales</h2>
+          <p className="text-xs text-gray-500 mb-4">Latest transactions today</p>
           <div className="space-y-3">
-            {lowStockAlerts.map((item) => (
-              <div key={item.name} className="p-3 rounded-lg bg-white/[0.02] border border-[var(--pos-border)] hover:border-amber-500/20 transition-colors">
+            {recentSales.slice(0, 4).map((sale) => (
+              <div key={sale.id} className="p-3 rounded-lg bg-white/[0.02] border border-[var(--pos-border)] hover:border-[var(--pos-accent)]/20 transition-colors">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-[var(--pos-text)]">{item.name}</span>
-                  <Badge variant={item.stock <= 5 ? 'danger' : 'warning'}>
-                    {item.stock} left
-                  </Badge>
+                  <span className="text-xs font-mono text-[var(--pos-accent)]">{sale.id}</span>
+                  <span className="text-sm font-semibold text-[var(--pos-text)]">Rs. {sale.total.toLocaleString()}</span>
                 </div>
-                <div className="w-full bg-white/[0.05] rounded-full h-1.5 mt-2">
-                  <div
-                    className={`h-1.5 rounded-full transition-all ${item.stock <= 5 ? 'bg-red-500' : 'bg-amber-500'}`}
-                    style={{ width: `${Math.min((item.stock / item.reorder) * 100, 100)}%` }}
-                  />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-400">{sale.patient} · {sale.items} items</span>
+                  <span className="text-[11px] text-gray-500 flex items-center gap-1"><Clock className="w-3 h-3" />{sale.time}</span>
                 </div>
-                <p className="text-[11px] text-gray-600 mt-1">Reorder level: {item.reorder}</p>
               </div>
             ))}
           </div>
@@ -172,23 +165,25 @@ export function PharmacyDashboard() {
           </div>
         </div>
 
-        {/* Recent Sales */}
+        {/* Top Selling Quick Stats */}
         <div className="bg-[var(--pos-surface)]/80 backdrop-blur-md border border-[var(--pos-border)] rounded-xl p-6">
-          <h2 className="text-sm font-semibold text-[var(--pos-text)] mb-1">Recent Sales</h2>
-          <p className="text-xs text-gray-500 mb-4">Latest transactions today</p>
-          <div className="space-y-3">
-            {recentSales.map((sale) => (
-              <div key={sale.id} className="p-3 rounded-lg bg-white/[0.02] border border-[var(--pos-border)] hover:border-[var(--pos-accent)]/20 transition-colors">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-mono text-[var(--pos-accent)]">{sale.id}</span>
-                  <span className="text-sm font-semibold text-[var(--pos-text)]">Rs. {sale.total.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-400">{sale.patient} · {sale.items} items</span>
-                  <span className="text-[11px] text-gray-500 flex items-center gap-1"><Clock className="w-3 h-3" />{sale.time}</span>
-                </div>
+          <h2 className="text-sm font-semibold text-[var(--pos-text)] mb-1">Today's Summary</h2>
+          <p className="text-xs text-gray-500 mb-4">Quick performance overview</p>
+          <div className="space-y-4">
+            <div className="p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/10 text-center">
+              <p className="text-2xl font-bold text-emerald-400 tabular-nums">Rs. {recentSales.reduce((sum, s) => sum + s.total, 0).toLocaleString()}</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Total Revenue</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-3 rounded-lg bg-[var(--pos-accent)]/5 border border-[var(--pos-accent)]/10 text-center">
+                <p className="text-lg font-bold text-[var(--pos-accent)] tabular-nums">{recentSales.length}</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Sales</p>
               </div>
-            ))}
+              <div className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/10 text-center">
+                <p className="text-lg font-bold text-blue-400 tabular-nums">Rs. {recentSales.length > 0 ? Math.round(recentSales.reduce((sum, s) => sum + s.total, 0) / recentSales.length).toLocaleString() : 0}</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Avg Basket</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

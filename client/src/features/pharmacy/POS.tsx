@@ -406,7 +406,7 @@ export function POS() {
   const change = Math.max(0, received - total);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       {/* ============ LEFT PANEL ============ */}
       <div className="flex-1 flex flex-col min-w-0 border-r border-[var(--pos-border)]">
         {/* Barcode Scanner + Search Bar */}
@@ -547,10 +547,10 @@ export function POS() {
                 {cart.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center py-16">
                     <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
-                      <ShoppingCart className="w-8 h-8 text-gray-600" />
+                      <ShoppingCart className="w-8 h-8 text-gray-500" />
                     </div>
                     <p className="text-gray-500 text-sm font-medium">No items in cart</p>
-                    <p className="text-gray-600 text-xs mt-1">Add products using search or barcode scanner</p>
+                    <p className="text-gray-500 text-xs mt-1">Add products using search or barcode scanner</p>
                     <p className="text-gray-700 text-xs mt-3">Press <kbd className="px-1.5 py-0.5 bg-white/5 rounded text-gray-500 font-mono">F1</kbd> to focus search</p>
                   </div>
                 ) : (
@@ -606,7 +606,7 @@ export function POS() {
                         <div className="flex justify-center">
                           <button
                             onClick={() => removeItem(item.product.id)}
-                            className="p-1.5 rounded-md hover:bg-red-500/10 text-gray-600 hover:text-red-400 transition-colors"
+                            className="p-1.5 rounded-md hover:bg-red-500/10 text-gray-500 hover:text-red-400 transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -764,7 +764,7 @@ export function POS() {
             'w-full py-4 rounded-xl text-base font-bold transition-all duration-300 flex items-center justify-center gap-2',
             cart.length > 0
               ? 'bg-[var(--pos-accent)] text-white hover:shadow-[0_4px_25px_rgba(13,148,136,0.4)] hover:-translate-y-0.5 active:scale-[0.98]'
-              : 'bg-gray-800 text-gray-600 cursor-not-allowed'
+              : 'bg-gray-800 text-gray-500 cursor-not-allowed'
           )}
         >
           <DollarSign className="w-5 h-5" />
@@ -788,7 +788,7 @@ export function POS() {
               >
                 <action.icon className="w-4 h-4" />
                 <span className="flex-1 text-left">{action.label}</span>
-                <kbd className="text-[10px] px-1.5 py-0.5 bg-white/5 rounded text-gray-600 font-mono">{action.shortcut}</kbd>
+                <kbd className="text-[10px] px-1.5 py-0.5 bg-white/5 rounded text-gray-500 font-mono">{action.shortcut}</kbd>
               </button>
             ))}
           </div>
@@ -810,8 +810,8 @@ export function POS() {
 
         {/* Keyboard Hints */}
         <div className="mt-auto pt-4 border-t border-[var(--pos-border)]">
-          <p className="text-[11px] font-semibold text-gray-600 uppercase tracking-wider mb-2">Keyboard Shortcuts</p>
-          <div className="space-y-1 text-[11px] text-gray-600">
+          <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">Keyboard Shortcuts</p>
+          <div className="space-y-1 text-[11px] text-gray-500">
             {[
               ['F1', 'Search products'],
               ['F2', 'Apply discount'],
@@ -875,7 +875,7 @@ export function POS() {
                     onChange={(e) => setAmountReceived(e.target.value)}
                     onFocus={(e) => e.target.select()}
                     placeholder={total.toFixed(0)}
-                    className="w-full h-14 px-4 rounded-xl bg-[var(--pos-card)] border border-[var(--pos-border)] text-2xl font-bold text-[var(--pos-text)] text-center tabular-nums focus:outline-none focus:border-[var(--pos-accent)] placeholder:text-gray-600"
+                    className="w-full h-14 px-4 rounded-xl bg-[var(--pos-card)] border border-[var(--pos-border)] text-2xl font-bold text-[var(--pos-text)] text-center tabular-nums focus:outline-none focus:border-[var(--pos-accent)] placeholder:text-gray-500"
                     autoFocus
                   />
                   {/* Quick amounts */}

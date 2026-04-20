@@ -155,7 +155,7 @@ export function ExpiryAlerts() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[var(--pos-bg)]">
+    <div className="flex flex-col min-h-full bg-[var(--pos-bg)]">
       {/* Notification */}
       {notification && (
         <div className="fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-sm font-medium shadow-lg max-w-sm">
@@ -248,13 +248,13 @@ export function ExpiryAlerts() {
                 >
                   <td className="px-4 py-3">
                     <p className="text-sm font-medium text-[var(--pos-text)]">{item.name}</p>
-                    <p className="text-xs text-gray-600">{item.code} · {item.group}</p>
+                    <p className="text-xs text-gray-500">{item.code} · {item.group}</p>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-xs font-mono text-gray-400">{item.batch}</span>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={cn('text-sm font-bold tabular-nums', item.qty <= 0 ? 'text-gray-600' : 'text-[var(--pos-text)]')}>
+                    <span className={cn('text-sm font-bold tabular-nums', item.qty <= 0 ? 'text-gray-500' : 'text-[var(--pos-text)]')}>
                       {item.qty} {item.unit}
                     </span>
                   </td>
@@ -262,7 +262,7 @@ export function ExpiryAlerts() {
                     <p className={cn('text-sm font-semibold', cfg.color)}>{formattedDate}</p>
                     {days <= 0
                       ? <p className="text-xs text-red-400/70">Expired {Math.abs(days)} day{Math.abs(days) !== 1 ? 's' : ''} ago</p>
-                      : <p className="text-xs text-gray-600">In {days} day{days !== 1 ? 's' : ''}</p>
+                      : <p className="text-xs text-gray-500">In {days} day{days !== 1 ? 's' : ''}</p>
                     }
                   </td>
                   <td className="px-4 py-3">

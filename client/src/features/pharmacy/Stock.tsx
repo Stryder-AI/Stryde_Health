@@ -16,7 +16,7 @@ function daysUntilExpiry(dateStr: string | undefined): number | null {
 }
 
 function ExpiryBadge({ dateStr }: { dateStr: string | undefined }) {
-  if (!dateStr) return <span className="text-xs text-gray-600">—</span>;
+  if (!dateStr) return <span className="text-xs text-gray-500">—</span>;
   const days = daysUntilExpiry(dateStr);
   if (days === null) return null;
 
@@ -176,7 +176,7 @@ export function Stock() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       {/* Sidebar */}
       <aside className="w-60 shrink-0 border-r border-[var(--pos-border)] flex flex-col">
         <div className="px-4 py-3 border-b border-[var(--pos-border)]">
@@ -322,7 +322,7 @@ export function Stock() {
                   <td className="px-4 py-2.5 text-sm text-gray-400 font-mono">{item.code}</td>
                   <td className="px-4 py-2.5">
                     <p className="text-sm font-medium text-[var(--pos-text)]">{item.name}</p>
-                    <p className="text-xs text-gray-600">{item.genericName}</p>
+                    <p className="text-xs text-gray-500">{item.genericName}</p>
                   </td>
                   <td className="px-4 py-2.5 text-right">
                     <span className={cn('text-sm font-bold tabular-nums', getStockColor(item))}>
@@ -342,7 +342,7 @@ export function Stock() {
                   </td>
                   <td className="px-4 py-2.5 text-sm text-gray-500 tabular-nums text-right">{item.reorderLevel}</td>
                   <td className="px-4 py-2.5"><ExpiryBadge dateStr={item.expiryDate} /></td>
-                  <td className="px-4 py-2.5 text-xs text-gray-600">{item.lastUpdated}</td>
+                  <td className="px-4 py-2.5 text-xs text-gray-500">{item.lastUpdated}</td>
                   <td className="px-4 py-2.5">
                     <button
                       onClick={() => openAdjustment(item)}

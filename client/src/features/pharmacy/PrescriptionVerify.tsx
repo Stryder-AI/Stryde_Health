@@ -271,7 +271,7 @@ export function PrescriptionVerify() {
   const dispensedCount = prescriptions.filter((rx) => rx.status === 'dispensed').length;
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       {/* ===== LEFT: Prescription List ===== */}
       <aside className="w-80 shrink-0 border-r border-[var(--pos-border)] flex flex-col">
         <div className="px-4 py-4 border-b border-[var(--pos-border)]">
@@ -393,16 +393,16 @@ export function PrescriptionVerify() {
                           </p>
                           <div className="mt-2 space-y-1">
                             <p className="text-xs text-gray-400">
-                              <span className="text-gray-600">Dosage:</span> {med.dosage}
+                              <span className="text-gray-500">Dosage:</span> {med.dosage}
                             </p>
                             <p className="text-xs text-gray-400">
-                              <span className="text-gray-600">Frequency:</span> {med.frequency}
+                              <span className="text-gray-500">Frequency:</span> {med.frequency}
                             </p>
                             <p className="text-xs text-gray-400">
-                              <span className="text-gray-600">Duration:</span> {med.duration}
+                              <span className="text-gray-500">Duration:</span> {med.duration}
                             </p>
                             <p className="text-xs text-gray-400">
-                              <span className="text-gray-600">Quantity:</span> <span className="font-semibold text-[var(--pos-text)]">{med.quantity}</span>
+                              <span className="text-gray-500">Quantity:</span> <span className="font-semibold text-[var(--pos-text)]">{med.quantity}</span>
                             </p>
                           </div>
                         </div>
@@ -450,7 +450,7 @@ export function PrescriptionVerify() {
                               'w-6 h-6 rounded-md flex items-center justify-center transition-all',
                               dispItem.verified
                                 ? 'bg-emerald-500 text-white'
-                                : 'bg-white/5 text-gray-600 hover:bg-white/10'
+                                : 'bg-white/5 text-gray-500 hover:bg-white/10'
                             )}
                           >
                             <Check className="w-4 h-4" />
@@ -485,7 +485,7 @@ export function PrescriptionVerify() {
                         {/* Quantity + Substitution Reason */}
                         <div className="grid grid-cols-2 gap-2">
                           <div>
-                            <label className="block text-[10px] text-gray-600 uppercase tracking-wider mb-1">Dispense Qty</label>
+                            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1">Dispense Qty</label>
                             <input
                               type="number"
                               min={0}
@@ -501,7 +501,7 @@ export function PrescriptionVerify() {
                             )}
                           </div>
                           <div>
-                            <label className="block text-[10px] text-gray-600 uppercase tracking-wider mb-1">Actions</label>
+                            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1">Actions</label>
                             <button
                               onClick={() => setSubstituteModalFor({ rxId: selectedRx.id, prescribedId: med.id })}
                               className="w-full h-9 px-3 rounded-lg bg-white/5 border border-[var(--pos-border)] text-gray-400 text-xs font-medium hover:bg-white/10 transition-colors flex items-center justify-center gap-1.5"
@@ -515,7 +515,7 @@ export function PrescriptionVerify() {
                         {/* Substitution Reason */}
                         {dispItem.isSubstitution && (
                           <div className="mt-2">
-                            <label className="block text-[10px] text-gray-600 uppercase tracking-wider mb-1">Substitution Reason</label>
+                            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1">Substitution Reason</label>
                             <input
                               type="text"
                               value={dispItem.substitutionReason}
@@ -569,7 +569,7 @@ export function PrescriptionVerify() {
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center text-center">
           <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
-            <ClipboardList className="w-8 h-8 text-gray-600" />
+            <ClipboardList className="w-8 h-8 text-gray-500" />
           </div>
           <p className="text-sm text-gray-500">Select a prescription from the queue</p>
         </div>

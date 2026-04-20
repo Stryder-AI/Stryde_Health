@@ -277,7 +277,7 @@ export function Returns() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
                   <span className="text-xs font-mono text-[var(--pos-accent)]">{sale.saleNumber}</span>
-                  <span className="text-[10px] text-gray-600 px-1.5 py-0.5 rounded bg-white/5">{sale.paymentMethod}</span>
+                  <span className="text-[10px] text-gray-500 px-1.5 py-0.5 rounded bg-white/5">{sale.paymentMethod}</span>
                 </div>
                 <p className="text-sm text-[var(--pos-text)]">{sale.patient}</p>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -352,7 +352,7 @@ export function Returns() {
                         <div className="grid grid-cols-3 gap-3 mt-3 animate-fade-in" style={{ animationDuration: '0.15s' }}>
                           {/* Return Qty */}
                           <div>
-                            <label className="block text-[10px] text-gray-600 uppercase tracking-wider mb-1">Return Qty</label>
+                            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1">Return Qty</label>
                             <input
                               type="number"
                               min={1}
@@ -365,7 +365,7 @@ export function Returns() {
 
                           {/* Reason */}
                           <div>
-                            <label className="block text-[10px] text-gray-600 uppercase tracking-wider mb-1">Reason</label>
+                            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1">Reason</label>
                             <select
                               value={ri.reason}
                               onChange={(e) => updateReturnItem(item.id, { reason: e.target.value as ReturnReason })}
@@ -377,7 +377,7 @@ export function Returns() {
 
                           {/* Exchange Product */}
                           <div>
-                            <label className="block text-[10px] text-gray-600 uppercase tracking-wider mb-1">Exchange (optional)</label>
+                            <label className="block text-[10px] text-gray-500 uppercase tracking-wider mb-1">Exchange (optional)</label>
                             <select
                               value={ri.exchangeProduct || ''}
                               onChange={(e) => updateReturnItem(item.id, { exchangeProduct: e.target.value || null })}

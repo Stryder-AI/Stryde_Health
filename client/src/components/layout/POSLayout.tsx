@@ -92,8 +92,8 @@ export function POSLayout() {
       </aside>
 
       {/* Content */}
-      <main className="flex-1 overflow-auto">
-        <div className="animate-fade-in">
+      <main className="flex-1 h-screen overflow-auto">
+        <div className="animate-fade-in h-full">
           <Outlet />
         </div>
       </main>

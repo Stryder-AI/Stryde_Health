@@ -121,7 +121,7 @@ export function Products() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       {/* Sidebar - Group Tree */}
       <aside className="w-60 shrink-0 border-r border-[var(--pos-border)] flex flex-col">
         <div className="px-4 py-3 border-b border-[var(--pos-border)]">
@@ -196,7 +196,7 @@ export function Products() {
                   <td className="px-4 py-2.5 text-sm text-gray-400 font-mono">{product.code}</td>
                   <td className="px-4 py-2.5">
                     <p className="text-sm font-medium text-[var(--pos-text)]">{product.name}</p>
-                    {product.manufacturer && <p className="text-xs text-gray-600">{product.manufacturer}</p>}
+                    {product.manufacturer && <p className="text-xs text-gray-500">{product.manufacturer}</p>}
                   </td>
                   <td className="px-4 py-2.5 text-sm text-gray-400">{product.genericName}</td>
                   <td className="px-4 py-2.5">
@@ -225,14 +225,14 @@ export function Products() {
                       if (days <= 30) return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400">{fmt}</span>;
                       if (days <= 60) return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-yellow-500/20 text-yellow-400">{fmt}</span>;
                       return <span className="text-xs text-gray-500">{fmt}</span>;
-                    })() : <span className="text-xs text-gray-600">—</span>}
+                    })() : <span className="text-xs text-gray-500">—</span>}
                   </td>
                   <td className="px-4 py-2.5">
                     <button onClick={() => toggleActive(product.id)} className="text-gray-400 hover:text-[var(--pos-accent)] transition-colors">
                       {product.active ? (
                         <ToggleRight className="w-6 h-6 text-[var(--pos-accent)]" />
                       ) : (
-                        <ToggleLeft className="w-6 h-6 text-gray-600" />
+                        <ToggleLeft className="w-6 h-6 text-gray-500" />
                       )}
                     </button>
                   </td>

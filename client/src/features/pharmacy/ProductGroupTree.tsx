@@ -131,7 +131,7 @@ function TreeNode({
         {group.count !== undefined && (
           <span className={cn(
             'ml-auto text-[11px] tabular-nums shrink-0',
-            isSelected ? 'text-[var(--pos-accent)]' : 'text-gray-600'
+            isSelected ? 'text-[var(--pos-accent)]' : 'text-gray-500'
           )}>
             {group.count}
           </span>
