@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   User, Phone, Droplets, Heart, Thermometer, Wind, Weight,
   Activity, FileText, Stethoscope, ClipboardList, Save,
   CheckCircle2, ArrowRight, AlertTriangle, Clock, Pill, FlaskConical
 } from 'lucide-react';
+import { toast } from '@/components/ui/Toast';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -32,6 +34,8 @@ const patient = {
 // ── Component ─────────────────────────────────────────────────
 
 export default function Consultation() {
+  const navigate = useNavigate();
+
   // Vitals
   const [vitals, setVitals] = useState({
     bpSystolic: '',
@@ -85,10 +89,27 @@ export default function Consultation() {
   });
 
   const [saving, setSaving] = useState(false);
+  const [completing, setCompleting] = useState(false);
 
   const handleSave = () => {
     setSaving(true);
-    setTimeout(() => setSaving(false), 1200);
+    setTimeout(() => {
+      setSaving(false);
+      toast.success('Consultation draft saved successfully.');
+    }, 800);
+  };
+
+  const handleComplete = () => {
+    setCompleting(true);
+    setTimeout(() => {
+      setCompleting(false);
+      toast.success('Consultation completed! Returning to OPD Queue.');
+      navigate('/doctor');
+    }, 800);
+  };
+
+  const handleRefer = () => {
+    toast.info('Refer Patient feature — select a department and specialist to refer this patient.', 'Referral');
   };
 
   return (
@@ -376,11 +397,11 @@ export default function Consultation() {
             <Save className="w-4 h-4" />
             Save &amp; Stay
           </Button>
-          <Button variant="primary">
+          <Button variant="primary" onClick={handleComplete} loading={completing}>
             <CheckCircle2 className="w-4 h-4" />
             Complete &amp; Next Patient
           </Button>
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={handleRefer}>
             <ArrowRight className="w-4 h-4" />
             Refer Patient
           </Button>

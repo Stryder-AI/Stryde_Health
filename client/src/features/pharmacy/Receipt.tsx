@@ -144,7 +144,7 @@ export const Receipt = forwardRef<HTMLDivElement, { data: ReceiptData }>(({ data
       {/* QR Code */}
       <div style={{ borderTop: '1px dashed #ccc', marginTop: 10, paddingTop: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
         <QRCode
-          data={`SHIFA:receipt:${data.saleNumber}:${data.customer ?? 'WALK-IN'}:${data.total}:${data.date}`}
+          data={`STRYDE:receipt:${data.saleNumber}:${data.customer ?? 'WALK-IN'}:${data.total}:${data.date}`}
           size={64}
           showLabel={false}
         />

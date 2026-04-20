@@ -157,25 +157,40 @@ function SectionHeader({ icon: Icon, title, description }: { icon: React.Element
 /*  Main Component                                                     */
 /* ------------------------------------------------------------------ */
 
+const SETTINGS_STORAGE_KEY = 'stryde-pharmacy-settings';
+
+function loadPersistedSettings(): SettingsState {
+  try {
+    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (stored) {
+      return { ...defaultSettings, ...JSON.parse(stored) };
+    }
+  } catch { /* ignore */ }
+  return { ...defaultSettings };
+}
+
 export function PharmacySettings() {
-  const [s, setS] = useState<SettingsState>({ ...defaultSettings });
-  const [toast, setToast] = useState(false);
+  const [s, setS] = useState<SettingsState>(loadPersistedSettings);
+  const [toastVisible, setToastVisible] = useState(false);
   const [confirmAction, setConfirmAction] = useState<string | null>(null);
 
   const upd = <K extends keyof SettingsState>(key: K, val: SettingsState[K]) =>
     setS((prev) => ({ ...prev, [key]: val }));
 
   const handleSave = () => {
-    setToast(true);
-    setTimeout(() => setToast(false), 3000);
+    try {
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(s));
+    } catch { /* storage full */ }
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 3000);
   };
 
   const handleDanger = (action: string) => {
     if (confirmAction === action) {
       // "Confirmed" — just reset the confirm state (demo)
       setConfirmAction(null);
-      setToast(true);
-      setTimeout(() => setToast(false), 3000);
+      setToastVisible(true);
+      setTimeout(() => setToastVisible(false), 3000);
     } else {
       setConfirmAction(action);
       setTimeout(() => setConfirmAction(null), 4000);
@@ -568,7 +583,7 @@ export function PharmacySettings() {
       </div>
 
       {/* Success Toast */}
-      {toast && (
+      {toastVisible && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-500/90 backdrop-blur-md text-white px-5 py-3 rounded-xl shadow-lg shadow-emerald-500/20 animate-[slideUp_0.3s_ease-out]">
           <CheckCircle className="w-4 h-4" />
           <span className="text-sm font-medium">Settings saved successfully</span>

@@ -327,6 +327,10 @@ export function TestTemplates() {
   const [selectedTemplate, setSelectedTemplate] = useState<LabTemplate | null>(null);
   const [showParameterModal, setShowParameterModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [newTemplate, setNewTemplate] = useState({
+    name: '', category: 'Hematology', sampleType: 'Blood' as 'Blood' | 'Urine' | 'Serum',
+    turnaroundTime: '', price: '',
+  });
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 50);
@@ -547,7 +551,28 @@ export function TestTemplates() {
             <Button variant="ghost" size="sm" onClick={() => setShowAddModal(false)}>
               Cancel
             </Button>
-            <Button variant="primary" size="sm" onClick={() => { setShowAddModal(false); toast.success('Test template created successfully.', 'Template Added'); }}>
+            <Button variant="primary" size="sm" onClick={() => {
+              if (!newTemplate.name.trim()) {
+                toast.error('Template name is required.'); return;
+              }
+              const id = `TPL-${String(templates.length + 1).padStart(3, '0')}`;
+              setTemplates(prev => [...prev, {
+                id,
+                name: newTemplate.name,
+                category: newTemplate.category,
+                sampleType: newTemplate.sampleType,
+                parameterCount: 0,
+                turnaroundTime: newTemplate.turnaroundTime || 'TBD',
+                price: newTemplate.price ? `Rs. ${newTemplate.price}` : 'TBD',
+                active: true,
+                parameters: [],
+                createdAt: new Date().toISOString().split('T')[0],
+                modifiedAt: new Date().toISOString().split('T')[0],
+              }]);
+              setNewTemplate({ name: '', category: 'Hematology', sampleType: 'Blood', turnaroundTime: '', price: '' });
+              setShowAddModal(false);
+              toast.success('Test template created successfully.', 'Template Added');
+            }}>
               <Plus className="w-3.5 h-3.5" />
               Create Template
             </Button>
@@ -555,30 +580,38 @@ export function TestTemplates() {
         }
       >
         <div className="space-y-5">
-          <Input label="Template Name" placeholder="e.g., Complete Blood Count (CBC)" />
+          <Input label="Template Name *" placeholder="e.g., Complete Blood Count (CBC)" value={newTemplate.name} onChange={(e) => setNewTemplate({ ...newTemplate, name: e.target.value })} />
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-[var(--text-secondary)]">Category</label>
-              <select className="w-full rounded-[var(--radius-sm)] border border-[var(--surface-border)] bg-[var(--surface)] px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:shadow-[0_0_0_3px_var(--primary-glow)] transition-all duration-300">
-                <option>Hematology</option>
-                <option>Biochemistry</option>
-                <option>Immunology</option>
-                <option>Urinalysis</option>
-                <option>Microbiology</option>
+              <select
+                value={newTemplate.category}
+                onChange={(e) => setNewTemplate({ ...newTemplate, category: e.target.value })}
+                className="w-full rounded-[var(--radius-sm)] border border-[var(--surface-border)] bg-[var(--surface)] px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:shadow-[0_0_0_3px_var(--primary-glow)] transition-all duration-300"
+              >
+                <option value="Hematology">Hematology</option>
+                <option value="Biochemistry">Biochemistry</option>
+                <option value="Immunology">Immunology</option>
+                <option value="Urinalysis">Urinalysis</option>
+                <option value="Microbiology">Microbiology</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-[var(--text-secondary)]">Sample Type</label>
-              <select className="w-full rounded-[var(--radius-sm)] border border-[var(--surface-border)] bg-[var(--surface)] px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:shadow-[0_0_0_3px_var(--primary-glow)] transition-all duration-300">
-                <option>Blood</option>
-                <option>Serum</option>
-                <option>Urine</option>
+              <select
+                value={newTemplate.sampleType}
+                onChange={(e) => setNewTemplate({ ...newTemplate, sampleType: e.target.value as 'Blood' | 'Urine' | 'Serum' })}
+                className="w-full rounded-[var(--radius-sm)] border border-[var(--surface-border)] bg-[var(--surface)] px-4 py-2.5 text-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--primary)] focus:shadow-[0_0_0_3px_var(--primary-glow)] transition-all duration-300"
+              >
+                <option value="Blood">Blood</option>
+                <option value="Serum">Serum</option>
+                <option value="Urine">Urine</option>
               </select>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Input label="Turnaround Time" placeholder="e.g., 2 hours" />
-            <Input label="Price (Rs.)" placeholder="e.g., 800" />
+            <Input label="Turnaround Time" placeholder="e.g., 2 hours" value={newTemplate.turnaroundTime} onChange={(e) => setNewTemplate({ ...newTemplate, turnaroundTime: e.target.value })} />
+            <Input label="Price (Rs.)" placeholder="e.g., 800" value={newTemplate.price} onChange={(e) => setNewTemplate({ ...newTemplate, price: e.target.value })} />
           </div>
           <div className="pt-4 border-t border-[var(--surface-border)]">
             <div className="flex items-center gap-2 mb-3">

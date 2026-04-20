@@ -146,6 +146,30 @@ function autoMatchProduct(medicineName: string): InventoryProduct | null {
   return inventoryProducts.find((p) => p.name.toLowerCase() === lower) || null;
 }
 
+/* Drug-allergy class mapping for interaction checking */
+const DRUG_ALLERGY_MAP: Record<string, string[]> = {
+  NSAIDs: ['diclofenac', 'ibuprofen', 'naproxen', 'aspirin', 'celecoxib', 'meloxicam', 'piroxicam', 'indomethacin', 'ketorolac', 'mefenamic'],
+  Penicillin: ['amoxicillin', 'ampicillin', 'penicillin', 'piperacillin', 'flucloxacillin', 'cloxacillin'],
+  'Sulfa drugs': ['sulfamethoxazole', 'sulfasalazine', 'sulfadiazine', 'co-trimoxazole', 'bactrim'],
+  Aspirin: ['aspirin', 'acetylsalicylic'],
+  Metformin: ['metformin'],
+};
+
+function checkDrugAllergyInteractions(allergies: string[], medicines: { name: string }[]): { medicine: string; allergy: string }[] {
+  const interactions: { medicine: string; allergy: string }[] = [];
+  for (const allergy of allergies) {
+    const drugs = DRUG_ALLERGY_MAP[allergy];
+    if (!drugs) continue;
+    for (const med of medicines) {
+      const medLower = med.name.toLowerCase();
+      if (drugs.some((d) => medLower.includes(d))) {
+        interactions.push({ medicine: med.name, allergy });
+      }
+    }
+  }
+  return interactions;
+}
+
 function formatRs(n: number) {
   return `Rs. ${n.toLocaleString('en-PK', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
@@ -174,7 +198,7 @@ export function PrescriptionVerify() {
 
   const selectedRx = prescriptions.find((rx) => rx.id === selectedRxId) || null;
 
-  // Initialize dispense items for a prescription
+  // Initialize dispense items for a prescription (eagerly stores to map)
   const getDispenseItems = (rx: Prescription): DispenseItem[] => {
     if (dispenseMap[rx.id]) return dispenseMap[rx.id];
     const items: DispenseItem[] = rx.medicines.map((med) => {
@@ -188,6 +212,8 @@ export function PrescriptionVerify() {
         verified: false,
       };
     });
+    // Eagerly persist so subsequent renders use the same object
+    setDispenseMap((prev) => ({ ...prev, [rx.id]: items }));
     return items;
   };
 
@@ -299,6 +325,32 @@ export function PrescriptionVerify() {
               </div>
             </div>
           )}
+
+          {/* Drug-Allergy Interaction Warning */}
+          {(() => {
+            const interactions = checkDrugAllergyInteractions(selectedRx.patient.allergies, selectedRx.medicines);
+            if (interactions.length === 0) return null;
+            return (
+              <div className="mx-5 mt-2 px-4 py-3 rounded-xl bg-red-600/15 border-2 border-red-500/40 animate-pulse">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-red-500 uppercase tracking-wide">Drug-Allergy Contraindication Detected</p>
+                    <div className="mt-2 space-y-1">
+                      {interactions.map((int, idx) => (
+                        <p key={idx} className="text-xs text-red-400 font-medium">
+                          <span className="font-bold text-red-300">{int.medicine}</span> is contraindicated — patient is allergic to <span className="font-bold text-red-300">{int.allergy}</span>
+                        </p>
+                      ))}
+                    </div>
+                    <p className="text-[10px] text-red-400/70 mt-2 uppercase tracking-wider font-semibold">
+                      Do NOT dispense without pharmacist override and documented clinical justification
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Patient + Doctor Info */}
           <div className="grid grid-cols-2 gap-4 px-5 pt-4 pb-2">

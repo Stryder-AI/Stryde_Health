@@ -381,16 +381,18 @@ export function POS() {
           break;
         case 'F9':
           e.preventDefault();
-          // Save sale (hold)
+          if (cart.length > 0) { toast.success('Sale saved as draft'); }
           break;
         case 'F10':
           e.preventDefault();
           openPayment();
           break;
         case 'Delete':
-          if (e.ctrlKey) {
+          if (e.ctrlKey && cart.length > 0) {
             e.preventDefault();
-            clearCart();
+            if (window.confirm(`Clear all ${cart.length} item(s) from the cart?`)) {
+              clearCart();
+            }
           }
           break;
       }
@@ -795,7 +797,11 @@ export function POS() {
         {/* Clear Cart */}
         {cart.length > 0 && (
           <button
-            onClick={clearCart}
+            onClick={() => {
+              if (window.confirm(`Clear all ${cart.length} item(s) from the cart? This cannot be undone.`)) {
+                clearCart();
+              }
+            }}
             className="w-full py-2.5 rounded-lg border border-red-500/20 text-red-400 text-sm font-medium hover:bg-red-500/10 transition-colors"
           >
             Clear Cart (Ctrl+Del)

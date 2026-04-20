@@ -46,7 +46,18 @@ const roleLabel: Record<string, string> = {
 export function UserManagement() {
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [editModal, setEditModal] = useState<string | null>(null);
   const [users, setUsers] = useState(demoUsers);
+
+  // New user form state
+  const [newUser, setNewUser] = useState({
+    fullName: '', email: '', password: '', role: '', department: '', specialization: '',
+  });
+
+  // Edit user form state
+  const [editUser, setEditUser] = useState({
+    fullName: '', email: '', role: '', department: '', specialization: '',
+  });
 
   const filtered = users.filter(u =>
     u.fullName.toLowerCase().includes(search.toLowerCase()) ||
@@ -57,6 +68,55 @@ export function UserManagement() {
   const toggleActive = (id: string) => {
     setUsers(prev => prev.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u));
     toast.success('User status updated');
+  };
+
+  const handleCreateUser = () => {
+    if (!newUser.fullName.trim() || !newUser.email.trim() || !newUser.role) {
+      toast.error('Please fill in Name, Email, and Role.');
+      return;
+    }
+    const id = String(Date.now());
+    setUsers(prev => [...prev, {
+      id,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      role: newUser.role,
+      department: newUser.department || 'Unassigned',
+      isActive: true,
+    }]);
+    setNewUser({ fullName: '', email: '', password: '', role: '', department: '', specialization: '' });
+    setShowModal(false);
+    toast.success('User created successfully');
+  };
+
+  const openEditModal = (id: string) => {
+    const user = users.find(u => u.id === id);
+    if (!user) return;
+    setEditUser({
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+      department: user.department,
+      specialization: '',
+    });
+    setEditModal(id);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editModal) return;
+    if (!editUser.fullName.trim() || !editUser.email.trim()) {
+      toast.error('Name and Email are required.');
+      return;
+    }
+    setUsers(prev => prev.map(u => u.id === editModal ? {
+      ...u,
+      fullName: editUser.fullName,
+      email: editUser.email,
+      role: editUser.role || u.role,
+      department: editUser.department || u.department,
+    } : u));
+    setEditModal(null);
+    toast.success('User updated successfully');
   };
 
   return (
@@ -123,7 +183,7 @@ export function UserManagement() {
               <TableCell>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => toast.info(`Edit profile for ${user.fullName}`)}
+                    onClick={() => openEditModal(user.id)}
                     className="p-1.5 rounded-[var(--radius-xs)] hover:bg-[var(--surface)] transition-colors"
                     title="Edit"
                   >
@@ -151,21 +211,36 @@ export function UserManagement() {
         <div className="space-y-4">
           <div className="flex justify-center pb-2">
             <AvatarUpload
-              initials="New User"
+              initials={newUser.fullName || 'New User'}
               size="md"
               onChange={() => {/* stored in component state as base64 preview */}}
             />
           </div>
-          <Input label="Full Name" placeholder="Enter full name" />
-          <Input label="Email" type="email" placeholder="user@strydehealth.com" />
-          <Input label="Password" type="password" placeholder="Minimum 8 characters" />
-          <Select label="Role" options={ROLE_OPTIONS} placeholder="Select role" />
-          <Input label="Department" placeholder="e.g. Cardiology, Front Desk" />
-          <Input label="Specialization" placeholder="e.g. Cardiologist (for doctors)" />
+          <Input label="Full Name *" placeholder="Enter full name" value={newUser.fullName} onChange={(e) => setNewUser({ ...newUser, fullName: e.target.value })} />
+          <Input label="Email *" type="email" placeholder="user@strydehealth.com" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
+          <Input label="Password *" type="password" placeholder="Minimum 8 characters" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} />
+          <Select label="Role *" options={ROLE_OPTIONS} placeholder="Select role" value={newUser.role} onChange={(e) => setNewUser({ ...newUser, role: e.target.value })} />
+          <Input label="Department" placeholder="e.g. Cardiology, Front Desk" value={newUser.department} onChange={(e) => setNewUser({ ...newUser, department: e.target.value })} />
+          <Input label="Specialization" placeholder="e.g. Cardiologist (for doctors)" value={newUser.specialization} onChange={(e) => setNewUser({ ...newUser, specialization: e.target.value })} />
         </div>
         <div className="flex justify-end gap-3 mt-6">
           <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-          <Button onClick={() => { setShowModal(false); toast.success('User created successfully'); }}>Create User</Button>
+          <Button onClick={handleCreateUser}>Create User</Button>
+        </div>
+      </Modal>
+
+      {/* Edit User Modal */}
+      <Modal open={!!editModal} onClose={() => setEditModal(null)} title="Edit User" size="md">
+        <div className="space-y-4">
+          <Input label="Full Name *" placeholder="Enter full name" value={editUser.fullName} onChange={(e) => setEditUser({ ...editUser, fullName: e.target.value })} />
+          <Input label="Email *" type="email" placeholder="user@strydehealth.com" value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} />
+          <Select label="Role" options={ROLE_OPTIONS} placeholder="Select role" value={editUser.role} onChange={(e) => setEditUser({ ...editUser, role: e.target.value })} />
+          <Input label="Department" placeholder="e.g. Cardiology, Front Desk" value={editUser.department} onChange={(e) => setEditUser({ ...editUser, department: e.target.value })} />
+          <Input label="Specialization" placeholder="e.g. Cardiologist (for doctors)" value={editUser.specialization} onChange={(e) => setEditUser({ ...editUser, specialization: e.target.value })} />
+        </div>
+        <div className="flex justify-end gap-3 mt-6">
+          <Button variant="secondary" onClick={() => setEditModal(null)}>Cancel</Button>
+          <Button onClick={handleSaveEdit}>Save Changes</Button>
         </div>
       </Modal>
     </div>

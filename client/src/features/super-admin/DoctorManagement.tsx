@@ -167,12 +167,16 @@ const DEPARTMENT_OPTIONS = [
 export function DoctorManagement() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+  const [doctors, setDoctors] = useState(demoDoctors);
+  const [newDoc, setNewDoc] = useState({
+    name: '', email: '', phone: '', specialization: '', department: '', password: '',
+  });
 
-  const totalDoctors = demoDoctors.length;
-  const activeToday = demoDoctors.filter((d) => d.status === 'active').length;
-  const departments = new Set(demoDoctors.map((d) => d.department)).size;
+  const totalDoctors = doctors.length;
+  const activeToday = doctors.filter((d) => d.status === 'active').length;
+  const departments = new Set(doctors.map((d) => d.department)).size;
   const avgPatientsPerDay = Math.round(
-    demoDoctors.filter((d) => d.status === 'active').reduce((sum, d) => sum + d.patientsToday, 0) / activeToday
+    doctors.filter((d) => d.status === 'active').reduce((sum, d) => sum + d.patientsToday, 0) / (activeToday || 1)
   );
 
   return (
@@ -198,7 +202,7 @@ export function DoctorManagement() {
 
       {/* Doctor Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
-        {demoDoctors.map((doctor) => (
+        {doctors.map((doctor) => (
           <Card
             key={doctor.id}
             hover
@@ -258,16 +262,31 @@ export function DoctorManagement() {
       {/* Add Doctor Modal */}
       <Modal open={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Doctor" size="md">
         <div className="space-y-4">
-          <Input label="Full Name" placeholder="Dr. Full Name" />
-          <Input label="Email" type="email" placeholder="doctor@strydehealth.com" />
-          <Input label="Phone" placeholder="0300-XXXXXXX" />
-          <Input label="Specialization" placeholder="e.g. Cardiologist" />
-          <Select label="Department" options={DEPARTMENT_OPTIONS} placeholder="Select department" />
-          <Input label="Password" type="password" placeholder="Minimum 8 characters" />
+          <Input label="Full Name *" placeholder="Dr. Full Name" value={newDoc.name} onChange={(e) => setNewDoc({ ...newDoc, name: e.target.value })} />
+          <Input label="Email *" type="email" placeholder="doctor@strydehealth.com" value={newDoc.email} onChange={(e) => setNewDoc({ ...newDoc, email: e.target.value })} />
+          <Input label="Phone" placeholder="0300-XXXXXXX" value={newDoc.phone} onChange={(e) => setNewDoc({ ...newDoc, phone: e.target.value })} />
+          <Input label="Specialization *" placeholder="e.g. Cardiologist" value={newDoc.specialization} onChange={(e) => setNewDoc({ ...newDoc, specialization: e.target.value })} />
+          <Select label="Department *" options={DEPARTMENT_OPTIONS} placeholder="Select department" value={newDoc.department} onChange={(e) => setNewDoc({ ...newDoc, department: e.target.value })} />
+          <Input label="Password" type="password" placeholder="Minimum 8 characters" value={newDoc.password} onChange={(e) => setNewDoc({ ...newDoc, password: e.target.value })} />
         </div>
         <div className="flex justify-end gap-3 mt-6">
           <Button variant="secondary" onClick={() => setShowAddModal(false)}>Cancel</Button>
-          <Button onClick={() => { setShowAddModal(false); toast.success('Doctor added successfully'); }}>
+          <Button onClick={() => {
+            if (!newDoc.name.trim() || !newDoc.email.trim() || !newDoc.specialization.trim() || !newDoc.department) {
+              toast.error('Please fill in all required fields.'); return;
+            }
+            const id = String(Date.now());
+            setDoctors(prev => [...prev, {
+              id, name: newDoc.name, email: newDoc.email, phone: newDoc.phone,
+              specialization: newDoc.specialization, department: newDoc.department,
+              status: 'active' as const, patientsToday: 0, totalAssigned: 0,
+              avgRating: 0, totalPatients: 0, experience: 'New',
+              schedule: [], recentPatients: [],
+            }]);
+            setNewDoc({ name: '', email: '', phone: '', specialization: '', department: '', password: '' });
+            setShowAddModal(false);
+            toast.success('Doctor added successfully');
+          }}>
             <Plus className="w-4 h-4" /> Add Doctor
           </Button>
         </div>
